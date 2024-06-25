@@ -16,24 +16,6 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin implements Listener {
-    // Объявление переменных из config.yml
-    private int disbandDelayHoursAfterLeavedPlayer;
-    private int disbandDelayHours;
-    private int disbandPlayerMinimum;
-
-    @Override
-    public void onEnable() {
-        // Загрузка конфигурации
-        saveDefaultConfig();
-        FileConfiguration config = getConfig();
-        disbandDelayHoursAfterLeavedPlayer = config.getInt("settings.disbandDelayHoursAfterLeavedPlayer", 24);
-        disbandDelayHours = config.getInt("settings.disbandDelayHours", 72);
-        disbandPlayerMinimum = config.getInt("settings.disbandPlayerMinimum", 3);
-
-        getServer().getLogger().info("AntagonCore был включен");
-        getServer().getPluginManager().registerEvents(this, this);
-
-public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
 
     public static AntagonCore getPlugin() {
@@ -42,8 +24,21 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        private int disbandDelayHoursAfterLeavedPlayer;
+        private int disbandDelayHours;
+        private int disbandPlayerMinimum;
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(new KingdomCreateListener(), this);
+
+        saveDefaultConfig();
+        FileConfiguration config = getConfig();
+        disbandDelayHoursAfterLeavedPlayer = config.getInt("settings.disbandDelayHoursAfterLeavedPlayer", 24);
+        disbandDelayHours = config.getInt("settings.disbandDelayHours", 72);
+        disbandPlayerMinimum = config.getInt("settings.disbandPlayerMinimum", 3);
+
+        getServer().getLogger().info("AntagonCore был включен");
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
