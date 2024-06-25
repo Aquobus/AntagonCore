@@ -19,11 +19,16 @@ import java.util.Objects;
 public class KingdomListener implements Listener {
     private final JavaPlugin plugin;
 
-    public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-
     public KingdomListener(JavaPlugin plugin) {
         this.plugin = plugin;
     }
+    // Объявляем и берём переменные из config.yml
+    private int hours =  3600 * 20L
+    public int disbandDelayHours = config.getInt("kingdomSettings.disbandDelayHours", 24) * hours;
+    public int disbandDelayHoursAfterLeavedPlayer = config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 72) * hours;
+    public int disbandPlayerMinimum = config.getInt("settings.disbandPlayerMinimum", 3);
+
+    public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
@@ -46,15 +51,13 @@ public class KingdomListener implements Listener {
                     }
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHours * 3600 * 20L);
+        }, disbandDelayHours);
     }
 
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
         Kingdom kingdom = event.getKingdom();
-        scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
+        scheduler.scheduleSyncDelayedTask(plugin, run() {
                 if (kingdom.getKingdomPlayers().size() < AntagonCore.getPlugin().disbandPlayerMinimum) {
                     for (KingdomPlayer kingdomPlayer : kingdom.getKingdomPlayers()) {
                         Player player = kingdomPlayer.getPlayer();
@@ -65,6 +68,6 @@ public class KingdomListener implements Listener {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHoursAfterLeavedPlayer); // Задержка в часах, конвертирующаяся в тики
+        }, disbandDelayHoursAfterLeavedPlayer); // Задержка в часах, конвертирующаяся в тики
     }
 }
