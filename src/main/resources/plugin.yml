@@ -1,0 +1,4 @@
+name: AntagonCore
+version: '${project.version}'
+main: com.aquobus.antagoncore.AntagonCore
+api-version: '1.20'
