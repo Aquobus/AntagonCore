@@ -67,5 +67,13 @@
           <version>1.20.2-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
+
+      <dependency>
+          <groupId>com.github.cryptomorin</groupId>
+          <artifactId>kingdoms</artifactId>
+          <version>1.16.8.1.1</version>
+          <!--          1.16.20.5-->
+          <scope>provided</scope>
+      </dependency>
   </dependencies>
 </project>
