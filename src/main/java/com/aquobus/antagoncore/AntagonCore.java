@@ -24,8 +24,8 @@ public final class AntagonCore extends JavaPlugin {
 
         saveDefaultConfig();
         FileConfiguration config = getConfig();
-        disbandDelayHoursAfterLeavedPlayer = config.getInt("settings.disbandDelayHoursAfterLeavedPlayer", 24);
-        disbandDelayHours = config.getInt("settings.disbandDelayHours", 72);
+        disbandDelayHoursAfterLeavedPlayer = config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
+        disbandDelayHours = config.getInt("kingdomSettings.disbandDelayHours", 72);
         disbandPlayerMinimum = config.getInt("settings.disbandPlayerMinimum", 3);
 
         getServer().getLogger().info("AntagonCore успешно был включен");

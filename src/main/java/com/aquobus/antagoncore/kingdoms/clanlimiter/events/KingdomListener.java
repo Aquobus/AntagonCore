@@ -2,6 +2,7 @@ package com.aquobus.antagoncore.kingdoms.clanlimiter.events;
 
 import com.aquobus.antagoncore.AntagonCore;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,9 @@ import java.util.Objects;
 public class KingdomListener implements Listener {
 
     public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+
+    public long timerValue = AntagonCore.getPlugin().disbandDelayHoursAfterLeavedPlayer * 3600 * 20L;
+
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
         Kingdom kingdom = event.getKingdom();
@@ -37,7 +41,7 @@ public class KingdomListener implements Listener {
                     }
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHoursAfterLeavedPlayer * 3600 * 20L);
+        }, timerValue);
     }
 
     @EventHandler
@@ -56,6 +60,6 @@ public class KingdomListener implements Listener {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHoursAfterLeavedPlayer * 3600 * 20L); // Задержка в часах, конвертирующаяся в тики
+        }, timerValue); // Задержка в часах, конвертирующаяся в тики
     }
 }
