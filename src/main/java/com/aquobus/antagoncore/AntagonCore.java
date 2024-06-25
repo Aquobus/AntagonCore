@@ -1,10 +1,6 @@
 package com.aquobus.antagoncore;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import com.aquobus.antagoncore.kingdoms.clanlimiter.events.KingdomCreateListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,6 +32,18 @@ public final class AntagonCore extends JavaPlugin implements Listener {
 
         getServer().getLogger().info("AntagonCore был включен");
         getServer().getPluginManager().registerEvents(this, this);
+
+public final class AntagonCore extends JavaPlugin {
+    public static AntagonCore plugin;
+
+    public static AntagonCore getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        getServer().getPluginManager().registerEvents(new KingdomCreateListener(), this);
     }
 
     @Override
