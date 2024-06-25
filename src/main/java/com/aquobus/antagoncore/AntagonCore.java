@@ -17,10 +17,8 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin = this;
-
         // Plugin startup logic
-        getServer().getPluginManager().registerEvents(new KingdomListener(), this);
+        getServer().getPluginManager().registerEvents(new KingdomListener(this), this);
 
         saveDefaultConfig();
         FileConfiguration config = getConfig();
