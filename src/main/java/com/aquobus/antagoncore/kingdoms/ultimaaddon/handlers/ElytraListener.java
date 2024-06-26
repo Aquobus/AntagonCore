@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.events;
+package com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -3,7 +3,7 @@ package com.aquobus.antagoncore;
 import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.KingdomListener;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.events.ElytraListener;
+import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,6 +23,8 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        plugin = this;
+
         getServer().getLogger().info("AntagonCore успешно был включен");
 
         // Plugin startup logic
