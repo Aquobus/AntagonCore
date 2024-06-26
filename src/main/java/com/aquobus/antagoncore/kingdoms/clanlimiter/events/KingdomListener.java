@@ -24,7 +24,7 @@ public class KingdomListener implements Listener {
     private Kingdom kingdom;
     private KingdomPlayer king;
     private Player player;
-    private int taskId;
+    private HashMap<Kingdom,Integer> TaskId = new  HashMap<Kingdom,Integer>();
 
     private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
     
@@ -41,7 +41,8 @@ public class KingdomListener implements Listener {
 
         assert player != null;
         player.sendMessage("Ваше величество, поздравляю с основанием королевства! Но учтите, что если в королевстве не будет минимум 3 человека через 12 часов после его создания, то оно будет уничтожено");
-        taskId = scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
+        
+        TaskId.put(kingdom, scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
                 assert kingdom != null;
@@ -53,7 +54,7 @@ public class KingdomListener implements Listener {
                     }
                 }
             }
-        }, plugin.config.getInt("kingdomSettings.disbandDelayHours", 12) * 3600 * 20L);
+        }, plugin.config.getInt("kingdomSettings.disbandDelayHours", 12) * 3600 * 20L));
     }
 
     @EventHandler
@@ -77,8 +78,8 @@ public class KingdomListener implements Listener {
 
     @EventHandler
     public void onKingdomDisband(KingdomDisbandEvent event) {
-        if (event.getKingdom() == kingdom) {
-            scheduler.cancelTask(taskId);
+        if (TaskId.containsKey(event.getKingdom())) {
+            scheduler.cancelTask(TaskId.get(event.getKingdom()));
         }
     }
 }
