@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
@@ -16,11 +15,11 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 import java.util.Objects;
 
 public class KingdomListener implements Listener {
-    private final JavaPlugin plugin;
+    private final AntagonCore plugin;
 
     public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
-    public KingdomListener(JavaPlugin plugin) {
+    public KingdomListener(AntagonCore plugin) {
         this.plugin = plugin;
     }
 
@@ -45,7 +44,7 @@ public class KingdomListener implements Listener {
                     }
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHours * 3600 * 20L);
+        }, this.plugin.disbandDelayHours * 3600 * 20L);
     }
 
     @EventHandler
@@ -64,6 +63,6 @@ public class KingdomListener implements Listener {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
                 }
             }
-        }, AntagonCore.getPlugin().disbandDelayHoursAfterLeavedPlayer); // Задержка в часах, конвертирующаяся в тики
+        }, this.plugin.disbandDelayHoursAfterLeavedPlayer); // Задержка в часах, конвертирующаяся в тики
     }
 }

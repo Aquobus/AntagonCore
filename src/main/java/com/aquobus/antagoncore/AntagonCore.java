@@ -5,7 +5,6 @@ import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.KingdomListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public final class AntagonCore extends JavaPlugin {
@@ -13,6 +12,7 @@ public final class AntagonCore extends JavaPlugin {
     public int disbandDelayHoursAfterLeavedPlayer;
     public int disbandDelayHours;
     public int disbandPlayerMinimum;
+
     public static AntagonCore plugin;
 
     public static AntagonCore getPlugin() {
@@ -25,12 +25,14 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        
+
         // Plugin startup logic
         saveDefaultConfig();
         FileConfiguration config = getConfig();
         disbandDelayHoursAfterLeavedPlayer = config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
         disbandDelayHours = config.getInt("kingdomSettings.disbandDelayHours", 72);
-        disbandPlayerMinimum = config.getInt("settings.disbandPlayerMinimum", 3);
+        disbandPlayerMinimum = config.getInt("kingdomSettings.disbandPlayerMinimum", 3);
 
         // Events register
         getServer().getLogger().info("AntagonCore успешно был включен");
