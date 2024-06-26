@@ -27,8 +27,8 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class Utils {
-    public static KingdomMetadataHandler kHandler;
-    public static KingdomMetadataHandler outpost_id = new StandardKingdomMetadataHandler(new Namespace("UltimaAddons", "OUTPOST_ID"));  // (long) id of outpost/outpost land
+    public static KingdomMetadataHandler kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
+    public static KingdomMetadataHandler outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));  // (long) id of outpost/outpost land
 
     public static String convertAmps(String s) {
         return s.replaceAll("&", "§");

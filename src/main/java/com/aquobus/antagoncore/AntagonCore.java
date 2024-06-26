@@ -4,6 +4,7 @@ import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.KingdomListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
+import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,6 +34,7 @@ public final class AntagonCore extends JavaPlugin {
         // Events register
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
         getServer().getPluginManager().registerEvents(new KingdomListener(this), this);
+        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         
 
         // Commands register
