@@ -8,12 +8,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public final class AntagonCore extends JavaPlugin {
-
-    public int disbandDelayHoursAfterLeavedPlayer;
-    public int disbandDelayHours;
-    public int disbandPlayerMinimum;
-    public String TestConfig;
-
     public static AntagonCore plugin;
     public FileConfiguration config = getConfig();
 

@@ -27,6 +27,8 @@ public class ACore implements CommandExecutor {
 
                 player.sendMessage(ChatColor.GREEN + "Плагин был перезагружен!");
                 return true;
+            } else if (args[0].equalsIgnoreCase("test")) {
+                player.sendMessage("test: " + plugin.config.getString("kingdomSettings.TestConfig"));
             }
         }
 

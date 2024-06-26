@@ -11,7 +11,8 @@ public class CommandCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (args.length == 1) {
             return List.of(
-                "reload"
+                "reload",
+                "test"
             );
         }
 
