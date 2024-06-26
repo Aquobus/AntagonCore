@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.general.GroupDisband;
@@ -16,13 +15,11 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.UUID;
 
 public class KingdomListener implements Listener {
     private AntagonCore plugin;
 
     private Kingdom kingdom;
-    private KingdomPlayer king;
     private Player player;
     private HashMap<Kingdom,Integer> TaskId = new  HashMap<Kingdom,Integer>();
 
@@ -36,8 +33,7 @@ public class KingdomListener implements Listener {
     public void onKingdomCreate(KingdomCreateEvent event) {
 
         kingdom = event.getKingdom();
-        king = Objects.requireNonNull(event.getKingdom()).getKing();
-        player = king.getPlayer();
+        player = Objects.requireNonNull(event.getKingdom()).getKing().getPlayer();
 
         assert player != null;
         player.sendMessage("Ваше величество, поздравляю с основанием королевства! Но учтите, что если в королевстве не будет минимум 3 человека через 12 часов после его создания, то оно будет уничтожено");
