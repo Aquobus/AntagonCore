@@ -25,11 +25,13 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        
+
 
         // Plugin startup logic
         saveDefaultConfig();
         FileConfiguration config = getConfig();
+
+        // config.yml variables
         disbandDelayHoursAfterLeavedPlayer = config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
         disbandDelayHours = config.getInt("kingdomSettings.disbandDelayHours", 72);
         disbandPlayerMinimum = config.getInt("kingdomSettings.disbandPlayerMinimum", 3);
