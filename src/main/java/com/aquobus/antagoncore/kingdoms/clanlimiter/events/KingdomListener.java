@@ -6,19 +6,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.general.GroupDisband;
 import org.kingdoms.events.general.KingdomCreateEvent;
+import org.kingdoms.events.general.KingdomDisbandEvent;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public class KingdomListener implements Listener {
     private AntagonCore plugin;
 
-    public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+    private Kingdom kingdom;
+    private KingdomPlayer king;
+    private Player player;
+    private int taskId;
 
+    private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+    
     public KingdomListener(AntagonCore plugin) {
         this.plugin = plugin;
     }
@@ -26,13 +35,13 @@ public class KingdomListener implements Listener {
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
 
-        Kingdom kingdom = event.getKingdom();
-        KingdomPlayer king = Objects.requireNonNull(event.getKingdom()).getKing();
-        Player player = king.getPlayer();
+        kingdom = event.getKingdom();
+        king = Objects.requireNonNull(event.getKingdom()).getKing();
+        player = king.getPlayer();
 
         assert player != null;
         player.sendMessage("Ваше величество, поздравляю с основанием королевства! Но учтите, что если в королевстве не будет минимум 3 человека через 12 часов после его создания, то оно будет уничтожено");
-        scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
+        taskId = scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
                 assert kingdom != null;
@@ -64,5 +73,12 @@ public class KingdomListener implements Listener {
                 }
             }
         }, plugin.config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24)); // Задержка в часах, конвертирующаяся в тики
+    }
+
+    @EventHandler
+    public void onKingdomDisband(KingdomDisbandEvent event) {
+        if (event.getKingdom() == kingdom) {
+            scheduler.cancelTask(taskId);
+        }
     }
 }
