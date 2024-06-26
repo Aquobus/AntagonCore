@@ -2,3 +2,4 @@ kingdomSettings:
   disbandDelayHoursAfterLeavedPlayer: 24
   disbandDelayHours: 12
   disbandPlayerMinimum: 3
+  TestConfig: Lorem Ipsum

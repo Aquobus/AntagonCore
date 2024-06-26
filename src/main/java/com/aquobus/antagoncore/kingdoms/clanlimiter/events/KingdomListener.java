@@ -15,7 +15,7 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 import java.util.Objects;
 
 public class KingdomListener implements Listener {
-    private final AntagonCore plugin;
+    private AntagonCore plugin;
 
     public BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
@@ -36,7 +36,7 @@ public class KingdomListener implements Listener {
             @Override
             public void run() {
                 assert kingdom != null;
-                if (kingdom.getKingdomPlayers().size() < AntagonCore.getPlugin().disbandPlayerMinimum) {
+                if (kingdom.getKingdomPlayers().size() < plugin.config.getInt("kingdomSettings.disbandPlayerMinimum", 3)) {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
 
                     if (player.isOnline()) {
@@ -44,7 +44,7 @@ public class KingdomListener implements Listener {
                     }
                 }
             }
-        }, this.plugin.disbandDelayHours * 3600 * 20L);
+        }, plugin.config.getInt("kingdomSettings.disbandDelayHours", 12) * 3600 * 20L);
     }
 
     @EventHandler
@@ -53,7 +53,7 @@ public class KingdomListener implements Listener {
         scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (kingdom.getKingdomPlayers().size() < AntagonCore.getPlugin().disbandPlayerMinimum) {
+                if (kingdom.getKingdomPlayers().size() < plugin.config.getInt("kingdomSettings.disbandPlayerMinimum", 3)) {
                     for (KingdomPlayer kingdomPlayer : kingdom.getKingdomPlayers()) {
                         Player player = kingdomPlayer.getPlayer();
                         if (player != null && player.isOnline()) {
@@ -63,6 +63,6 @@ public class KingdomListener implements Listener {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
                 }
             }
-        }, this.plugin.disbandDelayHoursAfterLeavedPlayer); // Задержка в часах, конвертирующаяся в тики
+        }, plugin.config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24)); // Задержка в часах, конвертирующаяся в тики
     }
 }
