@@ -2,3 +2,12 @@ kingdomSettings:
   disbandDelayHoursAfterLeavedPlayer: 24
   disbandDelayHours: 12
   disbandPlayerMinimum: 3
+
+kingdomMessages:
+  disband: "Ваше королевство было уничтожено из-за недостаточного количества игроков."
+  disbandWarning: "Ваше величество, поздравляю с основанием королевства! 
+  Учтите, если вы не наберете хотя бы {disbandPlayerMinimum} человека через {disbandDelayHours} часов
+  Ваше королевство будет стерто с лица земли!"
+  disbandWarningAfterLeavedPlayer: "Ой-ой, кажется один из участников вашего королевства покинул его. 
+  Теперь ваше королевство будет уничтожено через {disbandDelayHoursAfterLeavedPlayer} часов из-за недостаточного количества игроков.
+  Найдите нужное количество участников до этого времени, удачи!"
