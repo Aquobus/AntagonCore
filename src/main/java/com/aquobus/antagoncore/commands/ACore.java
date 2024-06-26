@@ -19,15 +19,13 @@ public class ACore implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
-            if (args.length != 2) return false;
-
-            String argument = args[0];
+            if (args.length != 1) return false;
 
             Player player = (Player) sender;
-            if (argument.toLowerCase() == "reload") {
+            if (args[0].equalsIgnoreCase("reload")) {
                 this.plugin.reload();
 
-                player.sendMessage(ChatColor.GREEN + "The plugin and it's config were reloaded!");
+                player.sendMessage(ChatColor.GREEN + "Плагин был перезагружен!");
                 return true;
             }
         }

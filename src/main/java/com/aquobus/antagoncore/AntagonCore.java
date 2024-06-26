@@ -1,15 +1,12 @@
 package com.aquobus.antagoncore;
 
 import com.aquobus.antagoncore.commands.ACore;
+import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.KingdomListener;
 
-import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 public final class AntagonCore extends JavaPlugin {
 
@@ -41,6 +38,9 @@ public final class AntagonCore extends JavaPlugin {
 
         // Commands register
         getServer().getPluginCommand("antagoncore").setExecutor(new ACore(this));
+        
+        // TabCompleter register
+        getServer().getPluginCommand("antagoncore").setTabCompleter(new CommandCompleter());
     }
 
     @Override
