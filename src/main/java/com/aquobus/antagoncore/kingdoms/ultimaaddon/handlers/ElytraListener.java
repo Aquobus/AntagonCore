@@ -60,7 +60,7 @@ public class ElytraListener implements Listener {
 
         elytraCancelling.add(player);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage(Utils.toComponent("&cYou feel your elytra weaken as the rain starts..."));
+            player.sendMessage(Utils.toComponent("&cКажется ваши элитры промокли..."));
             player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 2F, 0.8F);
             if (!player.isGliding()) {
                 elytraCancelling.remove(player);

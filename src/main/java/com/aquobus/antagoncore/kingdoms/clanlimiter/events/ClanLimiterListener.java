@@ -11,19 +11,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
-import org.kingdoms.events.general.GroupDisband;
-import org.kingdoms.events.general.KingdomCreateEvent;
-import org.kingdoms.events.general.KingdomDisbandEvent;
+import org.kingdoms.events.general.*;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 public class ClanLimiterListener implements Listener {
-    private AntagonCore plugin;
-    private int playerMinimum;
-    private int delayH;
-    private int delayHAfterLeave;
+    private final AntagonCore plugin;
+    private final int playerMinimum;
+    private final int delayH;
+    private final int delayHAfterLeave;
 
     public ClanLimiterListener(AntagonCore plugin) {
         this.plugin = plugin;
@@ -41,12 +39,12 @@ public class ClanLimiterListener implements Listener {
 
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
-        kingdom = event.getKingdom();
-        player = Objects.requireNonNull(event.getKingdom()).getKing().getPlayer();
-
+        Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
+        player = kingdom.getKing().getPlayer();
         assert player != null;
+
         player.sendMessage("Ваше величество, поздравляем с созданием королевства! Но учтите, что если в королевстве не наберется " + playerMinimum + " игроков, то через " + delayH + " часов королевство " + ChatColor.RED + " будет уничтожено");
-        
+
         TaskId.put(kingdom, scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -61,10 +59,19 @@ public class ClanLimiterListener implements Listener {
             }
         }, delayH * 3600 * 20L));
     }
+    @EventHandler
+    public void onKingdomDisband(KingdomDisbandEvent event) {
+        Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
+        Player player = kingdom.getKing().getPlayer();
+        assert player != null;
+
+        if (TaskId.containsKey(event.getKingdom())) {
+            scheduler.cancelTask(TaskId.get(event.getKingdom()));
+        }
+    }
 
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
-        Kingdom kingdom = event.getKingdom();
         scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -79,12 +86,5 @@ public class ClanLimiterListener implements Listener {
                 }
             }
         }, delayHAfterLeave); // Задержка в часах, конвертирующаяся в тики
-    }
-
-    @EventHandler
-    public void onKingdomDisband(KingdomDisbandEvent event) {
-        if (TaskId.containsKey(event.getKingdom())) {
-            scheduler.cancelTask(TaskId.get(event.getKingdom()));
-        }
     }
 }
