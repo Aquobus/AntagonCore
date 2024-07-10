@@ -19,13 +19,13 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class KingdomListener implements Listener {
+public class ClanLimiterListener implements Listener {
     private AntagonCore plugin;
     private int playerMinimum;
     private int delayH;
     private int delayHAfterLeave;
 
-    public KingdomListener(AntagonCore plugin) {
+    public ClanLimiterListener(AntagonCore plugin) {
         this.plugin = plugin;
 
         playerMinimum = plugin.config.getInt("kingdomSettings.disbandPlayerMinimum", 3);

@@ -54,10 +54,17 @@
           <id>papermc-repo</id>
           <url>https://repo.papermc.io/repository/maven-public/</url>
       </repository>
+
       <repository>
-          <id>sonatype</id>
-          <url>https://oss.sonatype.org/content/groups/public/</url>
+        <id>dv8tion</id>
+        <name>m2-dv8tion</name>
+        <url>https://m2.dv8tion.net/releases</url>
       </repository>
+
+      <repository>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -73,6 +80,13 @@
           <artifactId>kingdoms</artifactId>
           <version>1.16.8.1.1</version>
           <!--          1.16.20.5-->
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>com.discordsrv</groupId>
+          <artifactId>discordsrv</artifactId>
+          <version>1.28.0</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>
