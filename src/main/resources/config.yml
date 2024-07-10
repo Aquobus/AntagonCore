@@ -3,3 +3,4 @@ kingdomSettings:
   disbandDelayHours: 12
   disbandPlayerMinimum: 3
   TestConfig: Lorem Ipsum
+  giveDiscordRoleOnKingdomCreation: 1049047181308473395
