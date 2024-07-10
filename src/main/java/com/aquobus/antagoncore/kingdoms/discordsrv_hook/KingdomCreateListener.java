@@ -25,7 +25,6 @@ public class KingdomCreateListener implements Listener {
 
     public KingdomCreateListener(AntagonCore plugin) {
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
-
     }
 
     @EventHandler
@@ -44,6 +43,7 @@ public class KingdomCreateListener implements Listener {
                 .setName(kingdom.getName())
                 .setColor(Color.getColor("#445166"))
                 .setMentionable(true);
+        clanRole.complete();
     }
 
     @EventHandler
@@ -66,7 +66,12 @@ public class KingdomCreateListener implements Listener {
 
     @EventHandler
     public void onKingdomKingChange(KingdomKingChangeEvent event) {
-        // Написать замену роли в дискорде на нового короля
+        UUID oldKing = Objects.requireNonNull(event.getPlayer()).getId();
+        UUID newKing = Objects.requireNonNull(event.getNewKing().getId());
+        Member discordOldKing = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(oldKing));
+        Member discordNewKing = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(newKing));
+        DiscordUtil.removeRolesFromMember(discordOldKing, roleOnCreation);
+        DiscordUtil.addRoleToMember(discordNewKing, roleOnCreation);
     }
 
     @EventHandler
