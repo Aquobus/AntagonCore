@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.kingdoms.config.KingdomsConfig;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.land.location.SimpleChunkLocation;
@@ -51,8 +50,8 @@ public class Utils {
         player.sendMessage(toComponent(s));
     }
 
-    public static BukkitTask schedule(int ticks, Runnable r) {
-        return Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), () -> r.run(), ticks);
+    public static void schedule(int ticks, Runnable r) {
+        Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), r, ticks);
     }
 
     public static boolean hasChallenged(Kingdom kingdom) {
@@ -62,7 +61,7 @@ public class Utils {
         if (lastChallenge != null) {
             String[] lcs = lastChallenge.split("@");
             if (Kingdom.getKingdom(UUID.fromString(lcs[0])) != null 
-                    && ctime < Long.valueOf(lcs[1]) + wartime) {
+                    && ctime < Long.parseLong(lcs[1]) + wartime) {
                 return true;
             }
         }
@@ -98,13 +97,12 @@ public class Utils {
             toUnclaim.add(kl.getLocation());
         });
         
-        if (toUnclaim.size() == 0) {
+        if (toUnclaim.isEmpty()) {
             return 0;
         }
         
-        Bukkit.getScheduler().runTask(AntagonCore.getPlugin(), () -> {
-           k.unclaim(new HashSet<>(toUnclaim), kp, UnclaimLandEvent.Reason.ADMIN, kp != null);
-        });
+        Bukkit.getScheduler().runTask(AntagonCore.getPlugin(), () ->
+                k.unclaim(new HashSet<>(toUnclaim), kp, UnclaimLandEvent.Reason.ADMIN, kp != null));
         
         return toUnclaim.size();
     }

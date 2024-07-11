@@ -3,8 +3,8 @@ package com.aquobus.antagoncore.kingdoms.discordsrv_hook;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
-import github.scarsz.discordsrv.dependencies.jda.api.requests.restaction.RoleAction;
 import github.scarsz.discordsrv.util.DiscordUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,18 +32,20 @@ public class KingdomCreateListener implements Listener {
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
         Player player = kingdom.getKing().getPlayer();
         assert player != null;
+        // Выдать главе клана роль
         UUID kingId = player.getUniqueId();
         String discordId = DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(kingId);
         Member discordMember = DiscordUtil.getMemberById(discordId);
-
-        // Выдать главе клана роль
         DiscordUtil.addRoleToMember(discordMember, roleOnCreation);
         // Создать роль "Название клана"
-        RoleAction clanRole = discordMember.getGuild().createRole()
+        // FIXME: ВЫВЕСТИ ПЕРЕМЕННУЮ В КОНФИГ
+        // messages.roleCreationOnKingdomCreate = "Роль {created_role} была успешно создана"
+        // config.get("messages.roleCreationOnKingdomCreate").toString().replace("{created_role}", kingdom.getName());
+        discordMember.getGuild().createRole()
                 .setName(kingdom.getName())
                 .setColor(Color.getColor("#445166"))
-                .setMentionable(true);
-        clanRole.complete();
+                .setMentionable(true)
+                .queue(role -> Bukkit.getLogger().info("Роль для клана была создана"));
     }
 
     @EventHandler

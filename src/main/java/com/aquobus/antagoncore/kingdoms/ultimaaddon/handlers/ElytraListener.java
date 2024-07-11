@@ -20,8 +20,8 @@ import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
 
 public class ElytraListener implements Listener {
-    private AntagonCore plugin;
-    private static Set<Player> elytraCancelling = new HashSet<>();
+    private final AntagonCore plugin;
+    private static final Set<Player> elytraCancelling = new HashSet<>();
 
     public ElytraListener(AntagonCore plugin) {
         this.plugin = plugin;
