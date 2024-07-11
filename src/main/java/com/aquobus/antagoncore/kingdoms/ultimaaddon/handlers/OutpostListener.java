@@ -96,7 +96,7 @@ public class OutpostListener implements Listener {
             justRemoved.add(structure);
             structure.remove();
             int amt = Utils.unclaimOutpost(kp, kp.getKingdom(), structure);
-            Utils.msg(p, "&2You unclaimed &6" + amt + " &2land(s).");
+            Utils.msg(p, "&2Вы потеряли &6" + amt + " &2чанк(ов).");
         });
     }
 
@@ -175,7 +175,7 @@ public class OutpostListener implements Listener {
         // Must have a nexus
         Kingdom kingdom = kp.getKingdom();
         if (kingdom.getNexus() == null) {
-            Utils.msg(p, "&cYou must place your nexus using &a/k nexus &cbefore you can claim more lands!");
+            Utils.msg(p, "&cВы должны поставить Нексус через &a/k nexus &cперед приватом новых территорий!");
             return;
         }
 

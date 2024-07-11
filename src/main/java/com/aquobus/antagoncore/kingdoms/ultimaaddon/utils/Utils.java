@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import org.joml.Random;
 import org.kingdoms.config.KingdomsConfig;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.land.location.SimpleChunkLocation;
@@ -25,6 +26,8 @@ import com.aquobus.antagoncore.AntagonCore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
+import java.util.random.*;
 
 public class Utils {
     public static KingdomMetadataHandler kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
@@ -103,9 +106,18 @@ public class Utils {
         }
         
         Bukkit.getScheduler().runTask(AntagonCore.getPlugin(), () -> {
-           k.unclaim(new HashSet<>(toUnclaim), kp, UnclaimLandEvent.Reason.ADMIN, kp != null);
+            k.unclaim(new HashSet<>(toUnclaim), kp, UnclaimLandEvent.Reason.ADMIN, kp != null);
         });
         
         return toUnclaim.size();
+    }
+
+    public static String hexGenerator() {
+        Random random = new Random();
+        int randomHex = random.nextInt(0xffffff + 1);
+
+        String hex = String.format("#%06x", randomHex);
+
+        return hex;
     }
 }
