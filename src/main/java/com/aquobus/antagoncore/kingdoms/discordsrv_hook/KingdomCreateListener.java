@@ -89,11 +89,14 @@ public class KingdomCreateListener implements Listener {
         // DiscordUtil.removeRolesFromMember(discordOldKing, roleOnCreation);
         // DiscordUtil.addRoleToMember(discordNewKing, roleOnCreation);
 
-        UUID oldKing = actualKings.get(event.getKingdom()).getId();
-        UUID newKing = event.getNewKing().getId();
+        Kingdom kingdom = event.getKingdom();
+        KingdomPlayer oldKing = actualKings.get(kingdom);
+        KingdomPlayer newKing = event.getNewKing();
 
-        DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(oldKing), roleOnCreation);
-        DiscordUtil.addRoleToMember(DiscordRegulator.getMember(newKing), roleOnCreation);
+        DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(oldKing.getId()), roleOnCreation);
+        DiscordUtil.addRoleToMember(DiscordRegulator.getMember(newKing.getId()), roleOnCreation);
+
+        actualKings.replace(kingdom, newKing);
     }
 
     @EventHandler

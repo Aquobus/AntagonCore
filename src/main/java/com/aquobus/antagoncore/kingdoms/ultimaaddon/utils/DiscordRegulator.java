@@ -1,22 +1,14 @@
 package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
 
-import org.kingdoms.constants.group.Kingdom;
-
-import com.aquobus.antagoncore.AntagonCore;
-
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.util.DiscordUtil;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class DiscordRegulator {
-    private AntagonCore plugin = AntagonCore.getPlugin();
-    public final HashMap<Kingdom,Role> kingdomRole = new HashMap<>();
-
     // public void giveRoleToMember(Member member, Role role) {
     //     DiscordUtil.addRoleToMember(member, role);
     // }
