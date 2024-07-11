@@ -38,7 +38,7 @@ public class KingdomCreateListener implements Listener {
         Member discordMember = DiscordUtil.getMemberById(discordId);
         DiscordUtil.addRoleToMember(discordMember, roleOnCreation);
         // Создать роль "Название клана"
-        // FIXME: ВЫВЕСТИ ПЕРЕМЕННУЮ В КОНФИГ
+        // TODO: ВЫВЕСТИ ПЕРЕМЕННУЮ В КОНФИГ
         // messages.roleCreationOnKingdomCreate = "Роль {created_role} была успешно создана"
         // config.get("messages.roleCreationOnKingdomCreate").toString().replace("{created_role}", kingdom.getName());
         discordMember.getGuild().createRole()
