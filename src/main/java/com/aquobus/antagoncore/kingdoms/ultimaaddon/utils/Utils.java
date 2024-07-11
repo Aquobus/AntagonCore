@@ -1,9 +1,7 @@
 package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
 
-import java.util.UUID;
-import java.util.HashSet;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,8 +22,6 @@ import com.aquobus.antagoncore.AntagonCore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
-import java.util.Random;
 
 public class Utils {
     public static KingdomMetadataHandler kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
@@ -83,7 +79,7 @@ public class Utils {
         if (outpostdata == null) {
             return 0;
         }
-        
+
         long outpostid = ((StandardKingdomMetadata) outpostdata).getLong();
         Set<SimpleChunkLocation> toUnclaim = new HashSet<>();
         k.getLands().forEach(kl -> {
@@ -95,20 +91,20 @@ public class Utils {
             if (((StandardKingdomMetadata) kld).getLong() != outpostid) {
                 return;
             }
-            
+
             toUnclaim.add(kl.getLocation());
         });
-        
+
         if (toUnclaim.isEmpty()) {
             return 0;
         }
-        
+
         Bukkit.getScheduler().runTask(AntagonCore.getPlugin(), () -> k.unclaim(new HashSet<>(toUnclaim), kp, UnclaimLandEvent.Reason.ADMIN, kp != null));
-        
+
         return toUnclaim.size();
     }
 
     public static String hexGenerator() {
-        return String.format("#%06x", new Random().nextInt(0xffffff + 1));
+        return "#" + String.format("%06x", new Random().nextInt(0xffffff + 1));
     }
 }
