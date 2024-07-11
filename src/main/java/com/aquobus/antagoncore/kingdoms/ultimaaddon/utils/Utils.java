@@ -112,11 +112,6 @@ public class Utils {
     }
 
     public static String hexGenerator() {
-        Random random = new Random();
-        int randomHex = random.nextInt(0xffffff + 1);
-
-        String hex = String.format("#%06x", randomHex);
-
-        return hex;
+        return String.format("#%06x", new Random().nextInt(0xffffff + 1));
     }
 }

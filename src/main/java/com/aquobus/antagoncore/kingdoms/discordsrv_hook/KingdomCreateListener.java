@@ -68,7 +68,6 @@ public class KingdomCreateListener implements Listener {
         Player player = kingdom.getKing().getPlayer();
         assert player != null;
         Member member = DiscordRegulator.getMember(player.getUniqueId());
-        DiscordUtil.removeRolesFromMember(member, roleOnCreation);
 
         // Удаление роли "Название Клана" у всех участников
         Role memberRole = kingdomRoles.get(kingdom);
@@ -77,6 +76,7 @@ public class KingdomCreateListener implements Listener {
         //     Member eachDMember = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(eachMember));
         //     DiscordUtil.removeRolesFromMember(eachDMember, memberRole);
         // }
+        DiscordUtil.removeRolesFromMember(member, roleOnCreation);
         DiscordRegulator.removeRoleFromAllMembers(memberRole, members);
     }
 
