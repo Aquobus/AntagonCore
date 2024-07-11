@@ -72,7 +72,7 @@ public class KingdomCreateListener implements Listener {
 
         // Удаление роли "Название Клана" у всех участников
         Role memberRole = kingdomRoles.get(kingdom);
-        UUID members[] = kingdom.getMembers().toArray(new UUID[0]);
+        UUID[] members = kingdom.getMembers().toArray(new UUID[0]);
         // for (UUID eachMember : members) {
         //     Member eachDMember = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(eachMember));
         //     DiscordUtil.removeRolesFromMember(eachDMember, memberRole);
@@ -101,19 +101,19 @@ public class KingdomCreateListener implements Listener {
 
     @EventHandler
     public void onGroupRenameEvent(GroupRenameEvent event) {
+        // TODO: Написать замену роли участников на новое название
         // String oldName = event.getOldName();
         // String newName = event.getNewName();
-        // Написать замену роли участников на новое название
     }
 
     @EventHandler
     public void onKingdomJoin(KingdomJoinEvent event) {
-        event.getPlayer();
-        // Написать добавление роли при входе в клан
+        // TODO: Написать добавление роли при входе в клан
+        // event.getPlayer();
     }
 
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
-        // Написать удаление роли у участника
+        // TODO: Написать удаление роли у участника
     }
 }

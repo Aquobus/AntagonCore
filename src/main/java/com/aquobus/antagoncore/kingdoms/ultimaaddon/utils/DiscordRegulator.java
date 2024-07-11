@@ -20,18 +20,14 @@ public class DiscordRegulator {
     // }
 
     public static Member getMember(UUID PlayerId) {
-        Member discordMember = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(PlayerId));
-
-        return discordMember;
+        return DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(PlayerId));
     }
 
     public static Role createRole(Member member, String name) {
-        Role role = member.getGuild().createRole()
+        return member.getGuild().createRole()
             .setName(name)
             .setColor(Color.getColor(Utils.hexGenerator()))
             .setMentionable(true).complete();
-
-        return role;
     }
 
     public static void removeRoleFromAllMembers(Role role, UUID... members) {
