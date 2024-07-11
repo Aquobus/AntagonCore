@@ -16,17 +16,15 @@ import org.kingdoms.events.members.KingdomJoinEvent;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 
 import java.awt.*;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class KingdomCreateListener implements Listener {
     private final Role roleOnCreation;
+    private final Map<Kingdom, Role> kingdomRoles = new HashMap<>();
 
     public KingdomCreateListener(AntagonCore plugin) {
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
     }
-
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
@@ -45,7 +43,10 @@ public class KingdomCreateListener implements Listener {
                 .setName(kingdom.getName())
                 .setColor(Color.getColor("#445166"))
                 .setMentionable(true)
-                .queue(role -> Bukkit.getLogger().info("Роль для клана была создана"));
+                .queue(role -> {
+                    Bukkit.getLogger().info("Роль для клана была создана");
+                    kingdomRoles.put(kingdom, role); // Store the role in the HashMap
+                });
     }
 
     @EventHandler
@@ -59,10 +60,11 @@ public class KingdomCreateListener implements Listener {
         DiscordUtil.removeRolesFromMember(discordMember, roleOnCreation);
 
         // Удаление роли "Название Клана" у всех участников
+        Role memberRole = kingdomRoles.get(kingdom);
         Set<UUID> members = kingdom.getMembers();
         for (UUID member : members) {
             Member eachDMember = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(member));
-            DiscordUtil.removeRolesFromMember(eachDMember, roleOnCreation);
+            DiscordUtil.removeRolesFromMember(eachDMember, memberRole);
         }
     }
 
@@ -78,11 +80,14 @@ public class KingdomCreateListener implements Listener {
 
     @EventHandler
     public void onGroupRenameEvent(GroupRenameEvent event) {
+        // String oldName = event.getOldName();
+        // String newName = event.getNewName();
         // Написать замену роли участников на новое название
     }
 
     @EventHandler
     public void onKingdomJoin(KingdomJoinEvent event) {
+        event.getPlayer();
         // Написать добавление роли при входе в клан
     }
 
