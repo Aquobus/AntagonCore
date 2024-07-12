@@ -1,12 +1,16 @@
+// Весь листенер отвечает за то чтобы добавить дополнительное взаимодействие с дискордом для кингдомсов
+
 package com.aquobus.antagoncore.kingdoms.discordsrv_hook;
 
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.util.DiscordUtil;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.kingdoms.constants.group.Group;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.general.*;
@@ -20,10 +24,11 @@ import org.kingdoms.events.members.KingdomLeaveEvent;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.HashMap;
+import java.util.List;
 public class KingdomCreateListener implements Listener {
     private final Role roleOnCreation;
-    private final HashMap<Kingdom, Role> kingdomRoles = new HashMap<>();
-    private final HashMap<Kingdom, KingdomPlayer> actualKings = new HashMap<>();
+    private final HashMap<Group,Role> kingdomRoles = new HashMap<>();
+    private final HashMap<UUID,Role> roles = new HashMap<>();
 
     public KingdomCreateListener(AntagonCore plugin) {
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
@@ -32,6 +37,7 @@ public class KingdomCreateListener implements Listener {
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
+        Group group = kingdom.getGroup();
         Player player = kingdom.getKing().getPlayer();
         assert player != null;
         Member member = DiscordRegulator.getMember(player.getUniqueId());
@@ -39,23 +45,13 @@ public class KingdomCreateListener implements Listener {
         Role role = DiscordRegulator.createRole(member, kingdom.getName());
         DiscordUtil.addRolesToMember(member, roleOnCreation);
 
-        kingdomRoles.put(kingdom, role);
-        actualKings.put(kingdom, kingdom.getKing());
+        kingdomRoles.put(group, role);
 
-        // assert player != null;
-        // Выдать главе клана роль
-        // UUID kingId = player.getUniqueId();
-        // String discordId = DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(kingId);
-        // Member discordMember = DiscordUtil.getMemberById(discordId);
         
         // Создать роль "Название клана"
         // TODO: ВЫВЕСТИ ПЕРЕМЕННУЮ В КОНФИГ
         // messages.roleCreationOnKingdomCreate = "Роль {created_role} была успешно создана"
         // config.get("messages.roleCreationOnKingdomCreate").toString().replace("{created_role}", kingdom.getName());
-        // discordMember.getGuild().createRole()
-        //         .setName(kingdom.getName())
-        //         .setColor(Color.getColor(Utils.hexGenerator()))
-        //         .setMentionable(true)
         //         .queue(role -> {
         //             Bukkit.getLogger().info("Роль для клана была создана");
         //             kingdomRoles.put(kingdom, role); // Store the role in the HashMap
@@ -65,6 +61,7 @@ public class KingdomCreateListener implements Listener {
     @EventHandler
     public void onKingdomDisband(KingdomDisbandEvent event) {
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
+        Group group = kingdom.getGroup();
         Player player = kingdom.getKing().getPlayer();
         assert player != null;
         Member member = DiscordRegulator.getMember(player.getUniqueId());
@@ -72,38 +69,29 @@ public class KingdomCreateListener implements Listener {
         // Удаление роли "Название Клана" у всех участников
         Role memberRole = kingdomRoles.get(kingdom);
         UUID[] members = kingdom.getMembers().toArray(new UUID[0]);
-        // for (UUID eachMember : members) {
-        //     Member eachDMember = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(eachMember));
-        //     DiscordUtil.removeRolesFromMember(eachDMember, memberRole);
-        // }
         DiscordUtil.removeRolesFromMember(member, roleOnCreation);
         DiscordRegulator.removeRoleFromAllMembers(memberRole, members);
+
+        kingdomRoles.remove(group);
     }
 
     @EventHandler
     public void onKingdomKingChange(KingdomKingChangeEvent event) {
-        // UUID oldKing = Objects.requireNonNull(event.getPlayer()).getId();
-        // UUID newKing = Objects.requireNonNull(event.getNewKing().getId());
-        // Member discordOldKing = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(oldKing));
-        // Member discordNewKing = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(newKing));
-        // DiscordUtil.removeRolesFromMember(discordOldKing, roleOnCreation);
-        // DiscordUtil.addRoleToMember(discordNewKing, roleOnCreation);
-
-        Kingdom kingdom = event.getKingdom();
-        KingdomPlayer oldKing = actualKings.get(kingdom);
+        KingdomPlayer oldKing = event.getKingdom().getKing();
         KingdomPlayer newKing = event.getNewKing();
 
         DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(oldKing.getId()), roleOnCreation);
         DiscordUtil.addRoleToMember(DiscordRegulator.getMember(newKing.getId()), roleOnCreation);
-
-        actualKings.replace(kingdom, newKing);
     }
 
     @EventHandler
     public void onGroupRenameEvent(GroupRenameEvent event) {
         // TODO: Написать замену роли участников на новое название
-        // String oldName = event.getOldName();
-        // String newName = event.getNewName();
+        String oldName = event.getOldName();
+        String newName = event.getNewName();
+        
+        // Переименовать саму роль
+        // Переделать в базе
     }
 
     @EventHandler

@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
+
     public FileConfiguration config = getConfig();
 
     public static AntagonCore getPlugin() {
