@@ -5,54 +5,64 @@ import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.kingdoms.constants.group.Kingdom;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.UUID;
 
+import static com.aquobus.antagoncore.AntagonCore.plugin;
 public class DiscordRegulator {
-    public static void giveRolesToMember(Player player, Role role){
-        Member member = DiscordRegulator.getMember(player.getUniqueId());
-        DiscordUtil.addRolesToMember(member, role);
-    }
-
-    public static void giveRolesToMembers(ArrayList<Member> members, ArrayList<Role> roles) {
-        for (Member member : members) {
-            for (Role role : roles) {
-                DiscordUtil.addRoleToMember(member, role);
-            }
-        }
-    }
-
-    public static Member getMember(UUID PlayerId) {
-        return DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(PlayerId));
-    }
-
-    public static void createRole(Player player, String name) {
-        Member member = DiscordRegulator.getMember(player.getUniqueId());
-        member.getGuild().createRole()
-                .setName(name)
-                .setColor(Color.getColor(Utils.hexGenerator()))
-                .setMentionable(true).complete();
-        String debugInfo = String.format("Роль %s основанная на игроке %s была создана, discordId: %s", name, player, member);
-        Bukkit.getLogger().info(debugInfo);
-    }
-
-    public static void removeRolesFromMember(Player player) {
-
-    }
-
-    public static void removeRoleFromAllMembers(Role role, UUID... members) {
-        for (UUID member : members) {
-            DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(member), role);
-            return;
-        }
-    }
-    // Тщетная попытка реализовать переименовывание
-//    public static void renameRole(Role oldRoleName, Role newRoleName) {
-//        oldRoleName.delete().queue();
-//        createRole(event)
+//    /**
+//     Добавляет роли каждому участнику списка из списка ролей
+//     @param members ArrayList из мембером класса Member
+//     @param roles ArrayList из ролей класса Role
+//     */
+//    public static void addRolesToMembers(ArrayList<Member> members, ArrayList<Role> roles) {
+//        for (Member member : members) {
+//            for (Role role : roles) {
+//                DiscordUtil.addRoleToMember(member, role);
+//            }
+//        }
 //    }
+    /**
+     @param PlayerUUID UUID игрока класса Player
+     @return Класс Member
+     */
+    public static Member getMember(UUID PlayerUUID) {
+        return DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(PlayerUUID));
+    }
+    /**
+     Создаёт роль с названием клана, выставляет ей случайный цвет, сохраняет ID роли в конфиге плагина
+     @param kingdom Kingdom королевство для создания роли клана
+     */
+    public static void createRole(Kingdom kingdom, String reason) {
+        Member member = DiscordRegulator.getMember(kingdom.getKingId());
+        member.getGuild().createRole()
+                .setName(kingdom.getName())
+                .setColor(Color.getColor(Utils.hexGenerator()))
+                .setMentionable(true)
+                .reason(reason)
+                // Если не сработает создание заменить это полотно на complete() и вывести логи ниже
+                .queue(role -> {
+                    try {
+                        String storage = String.format("storage.%s.roleID: %s",kingdom.getId(),role);
+                        plugin.getConfig().save(storage);
+                        Bukkit.getLogger().info(String.format("AntagonCORE: Запись в конфиг | %s", storage));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Bukkit.getLogger().info(String.format("AntagonCORE: Создана роль | Role: %s Name: %s", role, role.getName()));
+                });
+    }
+
+    /**
+     Создаёт роль с названием клана, выставляет ей случайный цвет, сохраняет ID роли в конфиге плагина
+     @param kingdom Kingdom королевство для создания роли клана
+     */
+    public static void renameRole(Kingdom kingdom) {
+        Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID",kingdom.getId())));
+        role.delete().reason("Переименовывание клана");
+        Utils.scheduleAsync(100, () -> createRole(kingdom,"Переименовывание клана"));
+    }
 }

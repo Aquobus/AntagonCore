@@ -49,6 +49,9 @@ public class Utils {
         Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), r, ticks);
     }
 
+    public static void scheduleAsync(int ticks, Runnable r) {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(AntagonCore.getPlugin(), r, ticks);
+    }
     public static boolean hasChallenged(Kingdom kingdom) {
         long wartime = Utils.getWarTime();
         long ctime = System.currentTimeMillis();
