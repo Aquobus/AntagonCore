@@ -22,10 +22,10 @@ import java.util.UUID;
 
 import static com.aquobus.antagoncore.AntagonCore.plugin;
 
-public class KingdomCreateListener implements Listener {
+public class DiscordsrvListener implements Listener {
     private final Role roleOnCreation;
 
-    public KingdomCreateListener(AntagonCore plugin) {
+    public DiscordsrvListener(AntagonCore plugin) {
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
     }
     // REVIEW: Проверить работоспособность
@@ -61,6 +61,7 @@ public class KingdomCreateListener implements Listener {
 
         UUID oldKingUUID = Objects.requireNonNull(event.getKingdom()).getKing().getId();
         UUID newKingUUID = event.getNewKing().getId();
+        
         DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(oldKingUUID), roleOnCreation);
         DiscordUtil.addRoleToMember(DiscordRegulator.getMember(newKingUUID), roleOnCreation);
     }
