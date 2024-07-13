@@ -49,11 +49,11 @@ public class OutpostListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onOutpostBreak(KingdomItemBreakEvent<Structure> e) {
-        e.getKingdomItem();
+    public void onOutpostBreak(KingdomItemBreakEvent<Structure> event) {
+        event.getKingdomItem();
 
-        Structure structure = e.getKingdomItem();
-        if (!structure.getNameOrDefault().equals("Outpost")) {
+        Structure structure = event.getKingdomItem();
+        if (!structure.getNameOrDefault().equals("Точка снабжения")) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class OutpostListener implements Listener {
         }
 
         // Allow if structure was removed by Kingdoms or a player w/o kingdom
-        KingdomPlayer kp = e.getPlayer();
+        KingdomPlayer kp = event.getPlayer();
         if (kp == null || !kp.hasKingdom()) {
             return;
         }
@@ -74,31 +74,33 @@ public class OutpostListener implements Listener {
             return;
         }
 
-        e.setCancelled(true);
+        //FIXME:
+        // Перенёс это ниже т.к по идее, если мы доходим до отмены ивента,
+        // то следующий код просто не работает и его как бы и нет
+        //e.setCancelled(true);
 
         // Must not be in war
-        Player p = kp.getPlayer();
+        Player p = Objects.requireNonNull(kp.getPlayer());
         if (Utils.hasChallenged(kp.getKingdom())) {
-            assert p != null;
-            Utils.msg(p, "&cВы не можете этого сделать, поскольку вам бросили вызов или были брошены другим королевством.");
+            Utils.msg(p, "&cВы не можете этого сделать, поскольку вам бросили вызов или вы в состоянии войны.");
             return;
         }
 
         if (!kp.hasPermission(StandardKingdomPermission.UNCLAIM)) {
-            assert p != null;
-            Utils.msg(p, "&cУ вашего ранга в королевстве должны быть разрешения на удаление аванпостов без запроса!");
+            Utils.msg(p, "&cУ вашего ранга в королевстве должно быть разрешение на удаление аванпостов без запроса!");
             return;
         }
 
         // For some reason without the 1 tick delay it skips the confirmation screen
-        assert p != null;
         p.closeInventory();
-        Utils.schedule(1, () -> {
+        Utils.scheduleAsync(1, () -> {
             justRemoved.add(structure);
             structure.remove();
             int amt = Utils.unclaimOutpost(kp, kp.getKingdom(), structure);
             Utils.msg(p, "&2Вы потеряли &6" + amt + " &2чанк(ов).");
         });
+
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -129,34 +131,23 @@ public class OutpostListener implements Listener {
 
         // Check if its a structure
         String tag = nbt.get(StructureType.METADATA, NBTType.STRING);
-        if (tag == null || !tag.equals("outpost")) {
+        if (tag == null || !tag.equals("Точка снабжения")) {
             return;
         }
 
         // Hack to not let the method pass to Kingdoms by setting it to air
         // This works probably because the event stores a copy of the item
         // so when you set the type it doesn't affect the player(?)
-        event.setCancelled(true);
+        //FIXME: Не пойму зачем отменять евент, если что вернуть
+        //event.setCancelled(true);
         Player p = event.getPlayer();
-        assert item != null;
-        Material type = item.getType();
+        Material type = Objects.requireNonNull(item.getType());
         item.setType(Material.AIR);
 
         // Only allow outpost to be placed on unclaimed land not in the end
         SimpleChunkLocation scl = SimpleChunkLocation.of(pb);
-        if (p.getWorld().getName().equals("world_the_end") || ServiceHandler.isInRegion(scl)) {
+        if (p.getWorld().getName().equals("world_the_end") ||ServiceHandler.isInRegion(scl)) {
             Utils.msg(p, "&cВы не можете создать здесь аванпост!");
-            return;
-        }
-
-        // Check if land is claimed.
-        Land land = Land.getLand(scl);
-        if (land == null) {
-            land = new Land(scl);
-        }
-
-        if (land.isClaimed()) {
-            Utils.msg(Objects.requireNonNull(event.getPlayer().getPlayer()), "&cВы можете размещать аванпосты только на невостребованных землях!");
             return;
         }
 
@@ -174,6 +165,17 @@ public class OutpostListener implements Listener {
             return;
         }
 
+        Land land = Land.getLand(scl);
+        // Check if land is claimed.
+        if (land.isClaimed()) {
+            Utils.msg(event.getPlayer(), "&cВы можете размещать аванпосты только на невостребованных землях!");
+            return;
+        }
+
+        if (land == null) {
+            land = new Land(scl);
+        }
+
         // Must have a nexus
         Kingdom kingdom = kp.getKingdom();
         assert kingdom != null;
@@ -183,9 +185,9 @@ public class OutpostListener implements Listener {
         }
 
         // Must have less than 3 placed outposts
-        if (kingdom.getAllStructures().stream().filter(s -> s.getNameOrDefault().equals("Outpost")).count() >=
+        if (kingdom.getAllStructures().stream().filter(s -> s.getNameOrDefault().equals("Точка снабжения")).count() >=
                 StructureRegistry.getStyle("outpost").getOption("limits", "total").getInt()) {
-            Utils.msg(p, "&cВаше королевство достигла лимита в количестве аванпостов!");
+            Utils.msg(p, "&cВаше королевство достигло лимита в количестве аванпостов!");
             return;
         }
 
@@ -201,6 +203,7 @@ public class OutpostListener implements Listener {
             return;
         }
 
+        // Place Outpost block
         pb.setType(type);
 
         // Kingdoms spawn structure
@@ -213,7 +216,7 @@ public class OutpostListener implements Listener {
         outpost.spawnHolograms(kingdom);
         outpost.playSound("place");
         outpost.displayParticle("place");
-        Utils.msg(p, "&2Захвачена территория аванпоста на &6" + scl.getX() + "&7, &6" + scl.getZ());
+        Utils.msg(p, "&2Захвачена территория аванпоста на координатах &6" + scl.getX() + "&7, &6" + scl.getZ());
 
         // Add metadata
         // ID is simply cur time, no way 2 people put an outpost at the same milisecond...
@@ -351,7 +354,7 @@ public class OutpostListener implements Listener {
         }
 
         for (SimpleChunkLocation scl : e.getLandLocations()) {
-            if (Objects.requireNonNull(scl.getLand()).getStructures().values().stream().anyMatch(s -> s.getNameOrDefault().equals("Outpost"))) {
+            if (Objects.requireNonNull(scl.getLand()).getStructures().values().stream().anyMatch(s -> s.getNameOrDefault().equals("Точка снабжения"))) {
                 e.setCancelled(true);
                 Utils.msg(Objects.requireNonNull(Objects.requireNonNull(e.getPlayer()).getPlayer()), "&cЧтобы расприватить территорию, сломайте аванпост.");
                 return true;
