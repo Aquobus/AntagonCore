@@ -1,9 +1,7 @@
 package com.aquobus.antagoncore.kingdoms.clanlimiter.events;
 
 import com.aquobus.antagoncore.AntagonCore;
-
 import net.md_5.bungee.api.ChatColor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
-import org.kingdoms.events.general.*;
+import org.kingdoms.events.general.GroupDisband;
+import org.kingdoms.events.general.KingdomCreateEvent;
+import org.kingdoms.events.general.KingdomDisbandEvent;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 
 import java.util.HashMap;
@@ -33,9 +33,9 @@ public class ClanLimiterListener implements Listener {
 
     private Kingdom kingdom;
     private Player player;
-    private HashMap<Kingdom,Integer> TaskId = new HashMap<Kingdom,Integer>();
+    private final HashMap<Kingdom,Integer> TaskId = new HashMap<Kingdom,Integer>();
 
-    private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+    private final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
@@ -48,7 +48,6 @@ public class ClanLimiterListener implements Listener {
         TaskId.put(kingdom, scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                assert kingdom != null;
                 if (kingdom.getKingdomPlayers().size() < playerMinimum) {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
 
@@ -85,6 +84,6 @@ public class ClanLimiterListener implements Listener {
                     Objects.requireNonNull(kingdom.getGroup()).disband(GroupDisband.Reason.CUSTOM);
                 }
             }
-        }, delayHAfterLeave); // Задержка в часах, конвертирующаяся в тики
+        }, delayHAfterLeave * 3600 * 20L); // Задержка в часах, конвертирующаяся в тики
     }
 }

@@ -6,9 +6,10 @@ import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.KingdomCreateListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
-
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
@@ -41,10 +42,10 @@ public final class AntagonCore extends JavaPlugin {
         
 
         // Commands register
-        getServer().getPluginCommand("antagoncore").setExecutor(new ACore(this));
+        Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
         
         // TabCompleter register
-        getServer().getPluginCommand("antagoncore").setTabCompleter(new CommandCompleter());
+        Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setTabCompleter(new CommandCompleter());
     }
 
     @Override

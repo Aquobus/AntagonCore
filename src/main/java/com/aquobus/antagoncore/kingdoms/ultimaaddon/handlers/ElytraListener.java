@@ -1,8 +1,7 @@
 package com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,12 +15,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ElytraListener implements Listener {
-    private AntagonCore plugin;
-    private static Set<Player> elytraCancelling = new HashSet<>();
+    private final AntagonCore plugin;
+    private static final Set<Player> elytraCancelling = new HashSet<>();
 
     public ElytraListener(AntagonCore plugin) {
         this.plugin = plugin;

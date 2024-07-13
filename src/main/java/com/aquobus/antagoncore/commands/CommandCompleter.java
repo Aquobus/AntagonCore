@@ -1,10 +1,10 @@
 package com.aquobus.antagoncore.commands;
 
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+
+import java.util.List;
 
 public class CommandCompleter implements TabCompleter {
     @Override

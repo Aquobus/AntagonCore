@@ -1,13 +1,11 @@
 package com.aquobus.antagoncore.commands;
 
+import com.aquobus.antagoncore.AntagonCore;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.aquobus.antagoncore.AntagonCore;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class ACore implements CommandExecutor {
     public final AntagonCore plugin;
