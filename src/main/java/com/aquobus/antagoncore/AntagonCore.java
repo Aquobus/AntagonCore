@@ -13,7 +13,6 @@ import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
-
     public FileConfiguration config = getConfig();
 
     public static AntagonCore getPlugin() {
@@ -22,7 +21,8 @@ public final class AntagonCore extends JavaPlugin {
 
     public void reload() {
         reloadConfig();
-        config = getConfig();
+        getConfig();
+        this.config = getConfig();
     }
 
     @Override
