@@ -1,6 +1,7 @@
 package com.aquobus.antagoncore.discord_bot;
 
 import com.aquobus.antagoncore.AntagonCore;
+import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
@@ -62,7 +63,8 @@ public class slash_commands extends ListenerAdapter implements Listener, SlashCo
 //        }
 //    }
 
-    @Override
+    //@Override
+    @Subscribe
     public void onButtonInteraction(ButtonInteraction event) {
         if (event.getComponentId().equals("invite")) {
             event.reply("Наш дискорд: [https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)").setEphemeral(true).queue();
