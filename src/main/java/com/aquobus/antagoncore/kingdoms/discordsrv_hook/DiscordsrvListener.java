@@ -36,6 +36,8 @@ public class DiscordsrvListener implements Listener {
         // .createRole() создаёт роль и записывает в хранилище
         DiscordRegulator.createRole(kingdom, "Создание клана");
         DiscordUtil.addRoleToMember(DiscordRegulator.getMember(playerUUID), roleOnCreation);
+
+
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
@@ -49,8 +51,8 @@ public class DiscordsrvListener implements Listener {
         Player king = Objects.requireNonNull(kingdom.getKing().getPlayer());
         DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(king.getUniqueId()), roleOnCreation);
         // Удаляем роль "Название клана" у каждого участника
-        Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID",kingdom.getId())));
-        role.delete().reason("Удаление клана"); //.complete() ??
+        Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
+        role.delete().reason("Удаление клана").complete(); //.complete() ??
     }
     // REVIEW: Проверить работоспособность
     @EventHandler

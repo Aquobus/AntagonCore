@@ -38,22 +38,19 @@ public class DiscordRegulator {
      */
     public static void createRole(Kingdom kingdom, String reason) {
         Member member = DiscordRegulator.getMember(kingdom.getKingId());
-        member.getGuild().createRole()
+        Role role = member.getGuild().createRole()
                 .setName(kingdom.getName())
                 .setColor(Color.getColor(Utils.hexGenerator()))
                 .setMentionable(true)
                 .reason(reason)
                 // Если не сработает создание заменить это полотно на complete() и вывести логи ниже
-                .queue(role -> {
-                    try {
-                        String storage = String.format("storage.%s.roleID: %s",kingdom.getId(),role);
-                        plugin.getConfig().save(storage);
-                        Bukkit.getLogger().info(String.format("AntagonCORE: Запись в конфиг | %s", storage));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Bukkit.getLogger().info(String.format("AntagonCORE: Создана роль | Role: %s Name: %s", role, role.getName()));
-                });
+                .complete();
+        
+        String storage = String.format("storage.%s.roleID: %s",kingdom.getId(), role);
+        saveToStorage(storage);
+        
+        Bukkit.getLogger().info(String.format("AntagonCORE: Запись в конфиг | %s", storage));
+        Bukkit.getLogger().info(String.format("AntagonCORE: Создана роль | Role: %s Name: %s", role, role.getName()));
     }
 
     /**
@@ -63,6 +60,19 @@ public class DiscordRegulator {
     public static void renameRole(Kingdom kingdom) {
         Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID",kingdom.getId())));
         role.delete().reason("Переименовывание клана");
+
+        String storage = String.format("storage.%s.roleID: %s", kingdom.getId(), role);
+        saveToStorage(storage);
+
         Utils.scheduleAsync(100, () -> createRole(kingdom,"Переименовывание клана"));
+    }
+
+    public static void saveToStorage(String storage) {
+        try {
+            plugin.getConfig().save(storage);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

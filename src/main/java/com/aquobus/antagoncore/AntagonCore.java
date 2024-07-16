@@ -35,9 +35,10 @@ public final class AntagonCore extends JavaPlugin {
         saveDefaultConfig();
 
         // Events register
-        getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
+        getServer().getPluginManager().registerEvents(new ElytraListener(), this);
+        getServer().getPluginManager().registerEvents(new OutpostListener(), this);
+        
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         
 
