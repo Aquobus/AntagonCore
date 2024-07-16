@@ -16,7 +16,7 @@ import java.util.Objects;
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
     public FileConfiguration config = getConfig();
-    private final DiscordsrvListener slash_commands = new DiscordsrvListener(this);
+    private final slash_commands slash_commands = new slash_commands(this);
 
     public static AntagonCore getPlugin() {
         return plugin;
