@@ -31,6 +31,13 @@ public class DiscordReadyEvents {
 
     private volatile boolean init;
 
+    public void ready() {
+        DiscordCommands discordCommands = new DiscordCommands();
+        Bukkit.getPluginManager().registerEvents(discordCommands, AntagonCore.plugin);
+        DiscordSRV.api.addSlashCommandProvider(discordCommands);
+        discordCommands.reload();
+    }
+
     public DiscordReadyEvents() {
         init = false;
         if (DiscordSRV.isReady) {
@@ -45,13 +52,6 @@ public class DiscordReadyEvents {
             init = true;
             ready();
         }
-    }
-
-    public void ready() {
-        DiscordCommands discordCommands = new DiscordCommands();
-        Bukkit.getPluginManager().registerEvents(discordCommands, AntagonCore.plugin);
-        DiscordSRV.api.addSlashCommandProvider(discordCommands);
-        discordCommands.reload();
     }
 
 }

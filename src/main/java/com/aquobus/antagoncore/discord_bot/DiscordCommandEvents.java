@@ -43,6 +43,7 @@ public class DiscordCommandEvents {
         if (DiscordSRV.getPlugin().getMainGuild().equals(guild)) {
             return;
         }
+
         Set<CommandData> commands = event.getCommands();
         List<Command> originalCommands = guild.retrieveCommands().complete();
         for (Command command : originalCommands) {

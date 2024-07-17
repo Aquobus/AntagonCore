@@ -3,6 +3,7 @@ package com.aquobus.antagoncore;
 import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.discord_bot.DiscordCommandEvents;
+import com.aquobus.antagoncore.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.DiscordsrvListener;
@@ -33,6 +34,7 @@ public final class AntagonCore extends JavaPlugin {
     @Override
     public void onLoad() {
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
+        DiscordSRV.api.subscribe(new DiscordCommands());
     }
 
     @Override
@@ -47,6 +49,8 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
+        DiscordSRV.api.subscribe(new DiscordCommands());
+        DiscordSRV.api.subscribe(new DiscordCommandEvents());
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
         // TabCompleter register
