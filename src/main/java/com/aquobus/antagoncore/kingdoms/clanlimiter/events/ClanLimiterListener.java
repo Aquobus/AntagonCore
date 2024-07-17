@@ -21,8 +21,8 @@ public class ClanLimiterListener implements Listener {
 
     public ClanLimiterListener(AntagonCore plugin) {
         playerMinimum = plugin.config.getInt("kingdomSettings.disbandPlayerMinimum", 3);
-        delayH = 72000*plugin.config.getInt("kingdomSettings.disbandDelayHours", 12);
-        delayHAfterLeave = 72000*plugin.config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
+        delayH = plugin.config.getInt("kingdomSettings.disbandDelayHours", 12);
+        delayHAfterLeave = plugin.config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
     }
 
     @EventHandler
@@ -67,7 +67,7 @@ public class ClanLimiterListener implements Listener {
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
         Kingdom kingdom = event.getKingdom();
-        Utils.scheduleAsync(delayHAfterLeave, () -> {
+        Utils.scheduleAsync(72000*delayHAfterLeave, () -> {
             if (kingdom.getKingdomPlayers().size() < playerMinimum) {
                 for (KingdomPlayer kingdomPlayer : kingdom.getKingdomPlayers()) {
                     Player player = kingdomPlayer.getPlayer();

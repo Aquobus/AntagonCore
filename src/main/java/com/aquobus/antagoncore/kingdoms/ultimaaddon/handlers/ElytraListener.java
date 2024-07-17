@@ -19,12 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ElytraListener implements Listener {
-    private final AntagonCore plugin;
     private static final Set<Player> elytraCancelling = new HashSet<>();
-
-    public ElytraListener(AntagonCore plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onElytra(EntityToggleGlideEvent event) {
@@ -58,7 +53,7 @@ public class ElytraListener implements Listener {
         }
 
         elytraCancelling.add(player);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), () -> {
             player.sendMessage(Utils.toComponent("&cКажется ваши элитры промокли..."));
             player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 2F, 0.8F);
             if (!player.isGliding()) {
@@ -77,7 +72,7 @@ public class ElytraListener implements Listener {
                     player.setGliding(false);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 25, 0, true, false));
                 }
-            }.runTaskTimer(plugin, 20, 20);
+            }.runTaskTimer(AntagonCore.getPlugin(), 20, 20);
         }, 20);
     }
 }

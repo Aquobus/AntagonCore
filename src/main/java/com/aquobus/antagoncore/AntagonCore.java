@@ -10,11 +10,14 @@ import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 
 import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
+    public static KingdomMetadataHandler shield_time;
+    
     public FileConfiguration config = getConfig();
     private final slash_commands slash_commands = new slash_commands(this);
 
@@ -35,9 +38,10 @@ public final class AntagonCore extends JavaPlugin {
         // Plugin startup logic
         saveDefaultConfig();
         // Events register
-        getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
+        getServer().getPluginManager().registerEvents(new ElytraListener(), this);
+        getServer().getPluginManager().registerEvents(new OutpostListener(), this);
+        
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         getServer().getPluginManager().registerEvents(new slash_commands(this), this);
         DiscordSRV.api.subscribe(slash_commands);
