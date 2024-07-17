@@ -37,8 +37,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.aquobus.antagoncore.AntagonCore.plugin;
-
 public class DiscordsrvListener implements Listener {
     private final Role roleOnCreation;
     private final TextChannel defaultKingdomsChannel = DiscordUtil.getTextChannelById(Utils.getConfigString("kingdomSettings.defaultKingdomsMessagesChannel"));
@@ -92,7 +90,9 @@ public class DiscordsrvListener implements Listener {
 
         Kingdom kingdom = (Kingdom) Objects.requireNonNull(event.getGroup());
         String roleId = Utils.getConfigString(String.format("storage.%s.roleID", kingdom.getId()));
+
         DiscordUtil.getRole(roleId).getManager().setName(event.getNewName()).reason("Переименование клана").queue();
+
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
@@ -105,7 +105,7 @@ public class DiscordsrvListener implements Listener {
         Player player = Objects.requireNonNull(event.getPlayer().getPlayer());
 
         // НЕ УДАЛЯТЬ, СДЕЛАНО ДЛЯ ТОГО ЧТОБЫ РОЛЬ УСПЕЛА СОЗДАТЬСЯ И ТОЛЬКО ПОТОМ ПРИСВОИЛАСЬ
-        Utils.scheduleAsync(200, () -> {
+        Utils.schedule(200, () -> {
             Role role = DiscordUtil.getRole(Utils.getConfigString(String.format("storage.%s.roleID", kingdom.getId() )));
             DiscordUtil.addRoleToMember(DiscordUtils.getMember(player.getUniqueId()), role);
         });
