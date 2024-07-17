@@ -90,16 +90,9 @@ public class DiscordsrvListener implements Listener {
             return;
         }
 
-        // Отменяем ивент если не королевство
-        if (!(event.getGroup() instanceof Kingdom)) {
-            return;
-        }
-
-        UUID KingdomId = Objects.requireNonNull(event.getGroup().getId());
-        Kingdom newKingdom = Objects.requireNonNull(Kingdom.getKingdom(KingdomId));
-        String role = plugin.getConfig().getString(String.format("storage.%s.roleID", event.getGroup().getId()));
-
-        DiscordUtil.getRole(role).getManager().setName(newKingdom.getName()).reason("Переименование клана").submit();
+        Kingdom kingdom = (Kingdom) Objects.requireNonNull(event.getGroup());
+        String roleId = Utils.getConfigString(String.format("storage.%s.roleID", kingdom.getId()));
+        DiscordUtil.getRole(roleId).getManager().setName(event.getNewName()).reason("Переименование клана").queue();
     }
     // REVIEW: Проверить работоспособность
     @EventHandler

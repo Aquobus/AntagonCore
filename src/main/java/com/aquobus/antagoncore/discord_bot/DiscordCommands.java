@@ -58,15 +58,15 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
         DISCORD_COMMANDS = Collections.unmodifiableSet(discordCommands);
     }
 
-    private final DiscordSRV discordsrv;
-
-    public DiscordCommands(DiscordSRV discordsrv) {
-        this.discordsrv = discordsrv;
-    }
+//    private final DiscordSRV discordsrv;
+//
+//    public DiscordCommands(DiscordSRV discordsrv) {
+//        this.discordsrv = discordsrv;
+//    }
 
     @Override
     public Set<PluginSlashCommand> getSlashCommands() {
-        Guild guild = discordsrv.getMainGuild();
+        Guild guild = DiscordSRV.getPlugin().getMainGuild();
         List<CommandData> commandDataList = new ArrayList<>();
 
         commandDataList.add(new CommandData(ECHO_LABEL, "Повторяет введенный текст")
