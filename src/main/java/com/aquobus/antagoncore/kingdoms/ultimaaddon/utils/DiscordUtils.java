@@ -3,6 +3,7 @@ package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import org.bukkit.Bukkit;
 import org.kingdoms.constants.group.Kingdom;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.util.UUID;
 
 import static com.aquobus.antagoncore.AntagonCore.plugin;
-public class DiscordRegulator {
+public class DiscordUtils {
 //    /**
 //     Добавляет роли каждому участнику списка из списка ролей
 //     @param members ArrayList из мембером класса Member
@@ -36,7 +37,7 @@ public class DiscordRegulator {
     @param kingdom Kingdom королевство для создания роли клана
     */
     public static void createRole(Kingdom kingdom, String reason) {
-        Member member = DiscordRegulator.getMember(kingdom.getKingId());
+        Member member = DiscordUtils.getMember(kingdom.getKingId());
         Role role = member.getGuild().createRole()
                 .setName(kingdom.getName())
                 .setColor(Color.getColor(Utils.hexGenerator()))
@@ -46,7 +47,7 @@ public class DiscordRegulator {
                 .complete();
         
         String storageKingdomEntry = String.format("storage.%s.roleID", kingdom.getId());
-        saveEntryToStorage(storageKingdomEntry, role.getIdLong());
+        Utils.saveEntryToStorage(storageKingdomEntry, role.getIdLong());
         
         Bukkit.getLogger().info(String.format("AntagonCORE: Запись в конфиг | %s", storageKingdomEntry));
         Bukkit.getLogger().info(String.format("AntagonCORE: Создана роль | Role: %s Name: %s", role, role.getName()));
@@ -70,22 +71,12 @@ public class DiscordRegulator {
         Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
 
         role.delete().reason(reason).complete();
-        removeEntryFromStorage(storageKingdomEntry);
+        Utils.removeEntryFromStorage(storageKingdomEntry);
 
         return storageKingdomEntry;
     }
 
-    public static void saveEntryToStorage(String keyString, Long role) {
-        plugin.reloadConfig();
+    public static void sendMessage(TextChannel channel, String msg) {
 
-        plugin.getConfig().set(keyString, role);
-        plugin.saveConfig();
-    }
-
-    public static void removeEntryFromStorage(String keyString) {
-        plugin.reloadConfig();
-
-        plugin.getConfig().set(keyString, null);
-        plugin.saveConfig();
     }
 }
