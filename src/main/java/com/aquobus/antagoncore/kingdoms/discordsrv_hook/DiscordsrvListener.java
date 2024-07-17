@@ -4,8 +4,11 @@ package com.aquobus.antagoncore.kingdoms.discordsrv_hook;
 
 import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.DiscordRegulator;
+import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.util.DiscordUtil;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,8 +39,6 @@ public class DiscordsrvListener implements Listener {
         // .createRole() создаёт роль и записывает в хранилище
         DiscordRegulator.createRole(kingdom, "Создание клана");
         DiscordUtil.addRoleToMember(DiscordRegulator.getMember(playerUUID), roleOnCreation);
-
-
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
@@ -51,8 +52,7 @@ public class DiscordsrvListener implements Listener {
         Player king = Objects.requireNonNull(kingdom.getKing().getPlayer());
         DiscordUtil.removeRolesFromMember(DiscordRegulator.getMember(king.getUniqueId()), roleOnCreation);
         // Удаляем роль "Название клана" у каждого участника
-        Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
-        role.delete().reason("Удаление клана").complete(); //.complete() ??
+        DiscordRegulator.removeRole(kingdom, "Удаление клана");
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
@@ -74,10 +74,11 @@ public class DiscordsrvListener implements Listener {
             return;
         }
 
-        String newName = Objects.requireNonNull(event.getNewName());
-        Kingdom newKingdom = Objects.requireNonNull(Kingdom.getKingdom(newName));
+        UUID KingdomId = Objects.requireNonNull(event.getGroup().getId());
+        Kingdom newKingdom = Objects.requireNonNull(Kingdom.getKingdom(KingdomId));
+        String role = plugin.getConfig().getString(String.format("storage.%s.roleID", event.getGroup().getId()));
 
-        DiscordRegulator.renameRole(newKingdom);
+        DiscordUtil.getRole(role).getManager().setName(newKingdom.getName()).complete();
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
@@ -88,9 +89,12 @@ public class DiscordsrvListener implements Listener {
         // Выдать роль "Название клана" зашедшему игроку
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
         Player player = Objects.requireNonNull(event.getPlayer().getPlayer());
-        Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID",kingdom.getId())));
 
-        DiscordUtil.addRoleToMember(DiscordRegulator.getMember(player.getUniqueId()), role);
+        // НЕ УДАЛЯТЬ, СДЕЛАНО ДЛЯ ТОГО ЧТОБЫ РОЛЬ УСПЕЛА СОЗДАТЬСЯ И ТОЛЬКО ПОТОМ ПРИСВОИЛАСЬ
+        Utils.scheduleAsync(200, () -> {
+            Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
+            DiscordUtil.addRoleToMember(DiscordRegulator.getMember(player.getUniqueId()), role);
+        });
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
