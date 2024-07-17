@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public class DiscordCommands implements Listener, SlashCommandProvider {
 
     public static final String ECHO_LABEL = "echo";
-    public static final String ECHO_EXTEND_LABEL = "echoExtend";
+    public static final String ECHO_EXTEND_LABEL = "echoextend";
 
     public static final Set<String> DISCORD_COMMANDS;
 
@@ -93,7 +93,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
             event.reply(replyText).queue(); // reply immediately
         }
 
-        if (event.getName().equals("echoExtend")) {
+        if (event.getName().equals("echoextend")) {
             Button invite = Button.primary("invite","📩Discord");
             Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
             String replyText = Objects.requireNonNull(event.getOption("Текст")).getAsString();
