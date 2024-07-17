@@ -48,8 +48,7 @@ public class DiscordReadyEvents {
     }
 
     public void ready() {
-        DiscordSRV discordsrv = AntagonCore.discordsrv;
-        DiscordCommands discordCommands = new DiscordCommands(discordsrv);
+        DiscordCommands discordCommands = new DiscordCommands();
         Bukkit.getPluginManager().registerEvents(discordCommands, AntagonCore.plugin);
         DiscordSRV.api.addSlashCommandProvider(discordCommands);
         discordCommands.reload();

@@ -18,7 +18,6 @@ import java.util.Objects;
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
     public static KingdomMetadataHandler shield_time;
-    public static DiscordSRV discordsrv;
     public FileConfiguration config = getConfig();
 
     public static AntagonCore getPlugin() {
