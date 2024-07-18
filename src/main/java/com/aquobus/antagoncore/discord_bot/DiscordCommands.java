@@ -22,15 +22,19 @@ package com.aquobus.antagoncore.discord_bot;
 
 import com.aquobus.antagoncore.AntagonCore;
 import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.api.ListenerPriority;
+import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Emoji;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.ButtonClickEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.SlashCommandEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.Button;
+import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.ButtonInteraction;
 import org.bukkit.event.Listener;
 
 import java.lang.reflect.Field;
@@ -84,7 +88,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
 
     @SlashCommand(path = "echo", deferReply = true)
     public void echoCommand(SlashCommandEvent event) {
-        String replyText = event.getOption("text").getAsString();
+        String replyText = event.getOption("text").getAsString().replaceAll("\\n","\n");
         event.getHook().sendMessage(replyText).queue();
     }
 
@@ -92,7 +96,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
     public void echoextendCommand(SlashCommandEvent event) {
         //Emoji tiktok = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:tiktok:946499645020979210>"));
         //Emoji youtube = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:youtube:946499645020979210>"));
-        String replyText = event.getOption("text").getAsString();
+        String replyText = event.getOption("text").getAsString().replaceAll("\\n","\n");
 
         event.getHook().sendMessage(replyText)
                 .addActionRow(
@@ -101,5 +105,27 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
                         Button.link("https://www.youtube.com/@AntagonCreators","Youtube"),
                         Button.link("https://www.youtube.com/@AntagonCreators","Tiktok")
                 ).queue();
+    }
+//    @Subscribe(priority = ListenerPriority.HIGHEST)
+//    public void onButtonInteraction(ButtonInteraction event) {
+//        if (event.getComponentId().equals("invite")) {
+//            event.deferReply().queue();
+//            event.getHook()
+//                    .setEphemeral(true)
+//                    .sendMessage("[Ссылка на наш дискорд: https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)")
+//                    .queue();
+//            return;
+//        }
+//    }
+    @Subscribe(priority = ListenerPriority.HIGHEST)
+    public void onButtonClick(ButtonClickEvent event) {
+        if (event.getComponentId().equals("invite")) {
+            event.deferReply().queue();
+            event.getHook()
+                    .setEphemeral(true)
+                    .sendMessage("[Ссылка на наш дискорд: https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)")
+                    .queue();
+            return;
+        }
     }
 }

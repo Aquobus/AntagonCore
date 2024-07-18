@@ -28,6 +28,7 @@ import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.Command;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.ButtonInteraction;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.Set;
@@ -50,17 +51,6 @@ public class DiscordCommandEvents {
             if (DiscordCommands.DISCORD_COMMANDS.contains(command.getName())) {
                 commands.add(DiscordCommandDataUtils.toCommandData(command));
             }
-        }
-    }
-
-    @Subscribe(priority = ListenerPriority.HIGHEST)
-    public void onButtonInteraction(ButtonInteraction event) {
-        if (event.getComponentId().equals("invite")) {
-            event.deferReply().queue();
-            event.getHook()
-                    .setEphemeral(true)
-                    .sendMessage("[Ссылка на наш дискорд: https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)")
-                    .queue();
         }
     }
 }
