@@ -56,7 +56,7 @@ public class DiscordCommandEvents {
     @Subscribe(priority = ListenerPriority.HIGHEST)
     public void onButtonInteraction(ButtonInteraction event) {
         if (event.getComponentId().equals("invite")) {
-            event.reply("Наш дискорд: [https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)").setEphemeral(true).queue();
+            event.reply("[Ссылка на наш дискорд: https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)").queue();
         }
     }
 }

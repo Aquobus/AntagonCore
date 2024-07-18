@@ -25,6 +25,7 @@ import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Emoji;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.SlashCommandEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;
@@ -86,11 +87,19 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
         String replyText = event.getOption("text").getAsString();
         event.getHook().sendMessage(replyText).queue();
     }
-    @SlashCommand(path = "echo", deferReply = true)
+
+    @SlashCommand(path = "echoextend", deferReply = true)
     public void echoextendCommand(SlashCommandEvent event) {
-        Button invite = Button.primary("invite","📩Discord");
-        Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
+        Emoji tiktok = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:tiktok:946499645020979210>"));
+        Emoji youtube = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:youtube:946499645020979210>"));
         String replyText = event.getOption("text").getAsString();
-        event.getHook().sendMessage(replyText).addActionRow(invite,youtube).queue();
+
+        event.getHook().sendMessage(replyText)
+                .addActionRow(
+                        Button.primary("invite","📩Discord"),
+                        Button.link("https://www.youtube.com/@AntagonCreators","Youtube").withEmoji(youtube),
+                        Button.link("https://www.youtube.com/@AntagonCreators","Tiktok").withEmoji(tiktok)
+                ).queue();
+        //event.getHook().editOriginalComponents().setActionRow(invite,youtube).queue();
     }
 }
