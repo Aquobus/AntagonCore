@@ -89,15 +89,21 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
         }
 
         if (event.getName().equals("echo")) {
-            String replyText = Objects.requireNonNull(event.getOption("Текст")).getAsString();
-            event.reply(replyText).queue(); // reply immediately
+            event.deferReply().queue();
+            String replyText = event.getOption("text").getAsString();
+            event.getHook().sendMessage(replyText).queue();
+            //event.reply(replyText).queue();
+            return;
         }
 
         if (event.getName().equals("echoextend")) {
+            event.deferReply().queue();
             Button invite = Button.primary("invite","📩Discord");
             Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
-            String replyText = Objects.requireNonNull(event.getOption("Текст")).getAsString();
-            event.reply(replyText).addActionRow(invite,youtube).queue();
+            String replyText = event.getOption("text").getAsString();
+            event.getHook().sendMessage(replyText).queue();
+            //event.reply(replyText).addActionRow(invite,youtube).queue();
+            return;
         }
     }
 }
