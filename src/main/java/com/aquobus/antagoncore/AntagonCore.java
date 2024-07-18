@@ -33,8 +33,8 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        DiscordSRV.api.subscribe(new DiscordReadyEvents());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
-        DiscordSRV.api.subscribe(new DiscordCommands());
     }
 
     @Override
@@ -49,7 +49,6 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
-        DiscordSRV.api.subscribe(new DiscordCommands());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
