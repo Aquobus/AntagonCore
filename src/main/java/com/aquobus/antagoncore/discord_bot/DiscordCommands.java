@@ -26,7 +26,6 @@ import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.SlashCommandEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
@@ -82,28 +81,16 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
         DiscordSRV.api.updateSlashCommands();
     }
 
-    @SlashCommand(path = "*")
-    public void onSlashCommand(SlashCommandEvent event) {
-        if (!(event.getChannel() instanceof TextChannel)) {
-            return;
-        }
-
-        if (event.getName().equals("echo")) {
-            event.deferReply().queue();
-            String replyText = event.getOption("text").getAsString();
-            event.getHook().sendMessage(replyText).queue();
-            //event.reply(replyText).queue();
-            return;
-        }
-
-        if (event.getName().equals("echoextend")) {
-            event.deferReply().queue();
-            Button invite = Button.primary("invite","📩Discord");
-            Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
-            String replyText = event.getOption("text").getAsString();
-            event.getHook().sendMessage(replyText).addActionRow(invite,youtube).queue();
-            //event.reply(replyText).addActionRow(invite,youtube).queue();
-            return;
-        }
+    @SlashCommand(path = "echo", deferReply = true)
+    public void echoCommand(SlashCommandEvent event) {
+        String replyText = event.getOption("text").getAsString();
+        event.getHook().sendMessage(replyText).queue();
+    }
+    @SlashCommand(path = "echo", deferReply = true)
+    public void echoextendCommand(SlashCommandEvent event) {
+        Button invite = Button.primary("invite","📩Discord");
+        Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
+        String replyText = event.getOption("text").getAsString();
+        event.getHook().sendMessage(replyText).addActionRow(invite,youtube).queue();
     }
 }
