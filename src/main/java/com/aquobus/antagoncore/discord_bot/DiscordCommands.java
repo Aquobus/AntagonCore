@@ -90,16 +90,16 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
 
     @SlashCommand(path = "echoextend", deferReply = true)
     public void echoextendCommand(SlashCommandEvent event) {
-        Emoji tiktok = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:tiktok:946499645020979210>"));
-        Emoji youtube = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:youtube:946499645020979210>"));
+        //Emoji tiktok = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:tiktok:946499645020979210>"));
+        //Emoji youtube = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:youtube:946499645020979210>"));
         String replyText = event.getOption("text").getAsString();
 
         event.getHook().sendMessage(replyText)
                 .addActionRow(
                         Button.primary("invite","📩Discord"),
-                        Button.link("https://www.youtube.com/@AntagonCreators","Youtube").withEmoji(youtube),
-                        Button.link("https://www.youtube.com/@AntagonCreators","Tiktok").withEmoji(tiktok)
+                        //Button.link("https://www.youtube.com/@AntagonCreators","Youtube").withEmoji(youtube),
+                        Button.link("https://www.youtube.com/@AntagonCreators","Youtube"),
+                        Button.link("https://www.youtube.com/@AntagonCreators","Tiktok")
                 ).queue();
-        //event.getHook().editOriginalComponents().setActionRow(invite,youtube).queue();
     }
 }

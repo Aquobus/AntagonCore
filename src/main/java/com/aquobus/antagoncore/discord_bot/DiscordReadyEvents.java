@@ -29,7 +29,7 @@ import org.bukkit.Bukkit;
 
 public class DiscordReadyEvents {
 
-    private volatile boolean init = false;
+    private volatile boolean init;
     public void ready() {
         DiscordCommands discordCommands = new DiscordCommands();
         Bukkit.getPluginManager().registerEvents(discordCommands, AntagonCore.plugin);
@@ -37,13 +37,13 @@ public class DiscordReadyEvents {
         discordCommands.reload();
     }
 
-//    public DiscordReadyEvents() {
-//        init = false;
-//        if (DiscordSRV.isReady) {
-//            init = true;
-//            ready();
-//        }
-//    }
+    public DiscordReadyEvents() {
+        init = false;
+        if (DiscordSRV.isReady) {
+            init = true;
+            ready();
+        }
+    }
 
     @Subscribe(priority = ListenerPriority.HIGHEST)
     public void onDiscordReady(DiscordReadyEvent event) {
