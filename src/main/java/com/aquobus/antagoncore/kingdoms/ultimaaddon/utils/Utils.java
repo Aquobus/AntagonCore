@@ -10,7 +10,6 @@ import org.kingdoms.config.KingdomsConfig;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.land.location.SimpleChunkLocation;
 import org.kingdoms.constants.metadata.*;
-import org.kingdoms.constants.namespace.Namespace;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.lands.UnclaimLandEvent;
 import org.kingdoms.utils.time.TimeFormatter;
@@ -24,9 +23,6 @@ import java.util.UUID;
 import static com.aquobus.antagoncore.AntagonCore.plugin;
 
 public class Utils {
-    public static KingdomMetadataHandler kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
-    public static KingdomMetadataHandler outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));  // (long) id of outpost/outpost land
-
     public static String convertAmps(String s) {
         return s.replaceAll("&", "§");
     }
@@ -40,7 +36,7 @@ public class Utils {
     }
 
     public static String getLastChallenge(Kingdom kingdom) {
-        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get(kHandler);
+        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get(AntagonCore.kHandler);
         return skm == null ? null : skm.getString();
     }
 
@@ -82,7 +78,7 @@ public class Utils {
     }
 
     public static <T> int unclaimOutpost(KingdomPlayer kp, Kingdom k, KingdomsObject<T> l) {
-        KingdomMetadata outpostdata = l.getMetadata().get(outpost_id);
+        KingdomMetadata outpostdata = l.getMetadata().get(AntagonCore.outpost_id);
         if (outpostdata == null) {
             return 0;
         }
@@ -90,7 +86,7 @@ public class Utils {
         long outpostid = ((StandardKingdomMetadata) outpostdata).getLong();
         Set<SimpleChunkLocation> toUnclaim = new HashSet<>();
         k.getLands().forEach(kl -> {
-            KingdomMetadata kld = kl.getMetadata().get(outpost_id);
+            KingdomMetadata kld = kl.getMetadata().get(AntagonCore.outpost_id);
             if (kld == null) {
                 return;
             }

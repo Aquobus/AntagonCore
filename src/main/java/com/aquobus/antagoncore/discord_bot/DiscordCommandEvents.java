@@ -27,8 +27,6 @@ import github.scarsz.discordsrv.api.events.GuildSlashCommandUpdateEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.Command;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
-import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.ButtonInteraction;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.Set;

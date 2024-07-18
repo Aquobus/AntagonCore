@@ -13,13 +13,20 @@ import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
+import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
+import org.kingdoms.constants.namespace.Namespace;
 
 import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
     public static KingdomMetadataHandler shield_time;
+    public static KingdomMetadataHandler kHandler;
+    public static KingdomMetadataHandler outpost_id;
+
     public FileConfiguration config = getConfig();
+
+    
 
     public static AntagonCore getPlugin() {
         return plugin;
@@ -41,6 +48,8 @@ public final class AntagonCore extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
+        kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
 
         // Plugin startup logic
         saveDefaultConfig();
