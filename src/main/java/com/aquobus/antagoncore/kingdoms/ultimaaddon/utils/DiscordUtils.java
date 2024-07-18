@@ -3,7 +3,6 @@ package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import org.bukkit.Bukkit;
 import org.kingdoms.constants.group.Kingdom;
@@ -74,9 +73,5 @@ public class DiscordUtils {
         Utils.removeEntryFromStorage(storageKingdomEntry);
 
         return storageKingdomEntry;
-    }
-
-    public static void sendMessage(TextChannel channel, String msg) {
-
     }
 }

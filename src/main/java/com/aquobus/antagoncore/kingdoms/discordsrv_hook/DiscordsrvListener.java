@@ -5,11 +5,9 @@ package com.aquobus.antagoncore.kingdoms.discordsrv_hook;
 import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.DiscordUtils;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
-
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.util.DiscordUtil;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,13 +16,7 @@ import org.bukkit.event.Listener;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.metadata.StandardKingdomMetadata;
 import org.kingdoms.constants.player.KingdomPlayer;
-import org.kingdoms.events.general.GroupDisband;
-import org.kingdoms.events.general.GroupRenameEvent;
-import org.kingdoms.events.general.GroupShieldPurchaseEvent;
-import org.kingdoms.events.general.KingdomCreateEvent;
-import org.kingdoms.events.general.KingdomDisbandEvent;
-import org.kingdoms.events.general.KingdomKingChangeEvent;
-import org.kingdoms.events.general.KingdomPacifismStateChangeEvent;
+import org.kingdoms.events.general.*;
 import org.kingdoms.events.members.KingdomJoinEvent;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 import org.kingdoms.gui.GUIAccessor;
@@ -40,7 +32,7 @@ import java.util.UUID;
 public class DiscordsrvListener implements Listener {
     private final Role roleOnCreation;
     private final TextChannel defaultKingdomsChannel = DiscordUtil.getTextChannelById(Utils.getConfigString("kingdomSettings.defaultKingdomsMessagesChannel"));
-    private static Map<Player, Integer> cantClose = new HashMap<>();
+    private static final Map<Player, Integer> cantClose = new HashMap<>();
 
     public DiscordsrvListener(AntagonCore plugin) {
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
@@ -139,10 +131,8 @@ public class DiscordsrvListener implements Listener {
         long shieldtime = System.currentTimeMillis() + event.getShieldDuration() * 2;
         k.getMetadata().put(AntagonCore.shield_time, new StandardKingdomMetadata(shieldtime));
         String time = Utils.formatDate(event.getShieldDuration());
-        DiscordUtils.sendMessage(defaultKingdomsChannel, ":shield: **" + k.getName() + "** активировал щит на время: " + time);
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            Utils.msg(p, "&6" + k.getName() + " &2активировал щит на время: &6" + time);
-        });
+        DiscordUtil.sendMessage(defaultKingdomsChannel, ":shield: **" + k.getName() + "** активировал щит на время: " + time);
+        Bukkit.getOnlinePlayers().forEach(p -> Utils.msg(p, "&6" + k.getName() + " &2активировал щит на время: &6" + time));
 
         // Close other shield buyers to stop abuse
         // k.getOnlineMembers().forEach(p -> Utils.closeInventory(p, "Shields", "Challenge"));
@@ -154,18 +144,18 @@ public class DiscordsrvListener implements Listener {
         // k.getOnlineMembers().forEach(p -> Utils.closeInventory(p, "Challenge"));
         String name = k.getName();
         if (event.getReason() == GroupDisband.Reason.INVASION) {
-            DiscordUtils.sendMessage(defaultKingdomsChannel, ":dart: **" + name + "** было распущено так как их чанк с Нексусом был захвачен");
+            DiscordUtil.sendMessage(defaultKingdomsChannel, ":dart: **" + name + "** было распущено так как их чанк с Нексусом был захвачен");
         } else if (event.getReason() == GroupDisband.Reason.INACTIVITY) {
-            DiscordUtils.sendMessage(defaultKingdomsChannel, ":pencil: **" + name + "** было распущено из-за неактивности.");
+            DiscordUtil.sendMessage(defaultKingdomsChannel, ":pencil: **" + name + "** было распущено из-за неактивности.");
         } else {
-            DiscordUtils.sendMessage(defaultKingdomsChannel, ":pencil: **" + name + "** было распущено");
+            DiscordUtil.sendMessage(defaultKingdomsChannel, ":pencil: **" + name + "** было распущено");
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCreate(KingdomCreateEvent event) {
         Kingdom k = event.getKingdom();
-        DiscordUtils.sendMessage(defaultKingdomsChannel, ":fleur_de_lis: **" + k.getName() + "** было создано");
+        DiscordUtil.sendMessage(defaultKingdomsChannel, ":fleur_de_lis: **" + k.getName() + "** было создано");
         openSelectionGUI(k);
     }
 
@@ -175,19 +165,19 @@ public class DiscordsrvListener implements Listener {
         Player player = kp.getPlayer();
         int att = cantClose.getOrDefault(player, 0) + 1;
         if (att > 10) {
-            setAggressor(k, kp, player);
+            setAggressor(k, player);
             Bukkit.getLogger().warning(player.getName() + " слишком много раз закрывал GUI и автоматически переключался на режим агрессора");
             return;
         }
         cantClose.put(player, att);
         
         InteractiveGUI gui = GUIAccessor.prepare(player, KingdomsGUI.KINGDOM$CREATE);
-        gui.push("pacifist", () -> setPacifist(k, kp, player))
-        .push("aggressor", () -> setAggressor(k, kp, player));
+        gui.push("pacifist", () -> setPacifist(k, player))
+        .push("aggressor", () -> setAggressor(k, player));
         gui.onClose(() -> Utils.schedule(1, () -> {
             // Should not happen
             if (!player.isOnline()) {
-                setAggressor(k, kp, player);
+                setAggressor(k, player);
                 return;
             }
             
@@ -198,7 +188,7 @@ public class DiscordsrvListener implements Listener {
         gui.open();
     }
     
-    private void setAggressor(Kingdom k, KingdomPlayer kp, Player player) {
+    private void setAggressor(Kingdom k, Player player) {
         k.setPacifist(false);
         KingdomsLang.COMMAND_CREATE_AGGRESSOR.sendMessage(player);
         cantClose.remove(player);
@@ -210,7 +200,7 @@ public class DiscordsrvListener implements Listener {
         k.getMetadata().put(AntagonCore.shield_time, new StandardKingdomMetadata(shieldtime));
     }
     
-    private void setPacifist(Kingdom k, KingdomPlayer kp, Player player) {
+    private void setPacifist(Kingdom k, Player player) {
         k.setPacifist(true);
         KingdomsLang.COMMAND_CREATE_PACIFIST.sendMessage(player);
         cantClose.remove(player);
@@ -222,11 +212,11 @@ public class DiscordsrvListener implements Listener {
         String k = e.getKingdom().getName();
         String inGame;
         if (e.isPacifist()) {
-            DiscordUtils.sendMessage(defaultKingdomsChannel, ":peace: **" + k + "** is now a pacifist Kingdom");
-            inGame = "&6" + k + " &2is a pacifist Kingdom.";
+            DiscordUtil.sendMessage(defaultKingdomsChannel, ":peace: **" + k + "** теперь пацифистское Королевство");
+            inGame = "&6" + k + " &2теперь пацифистское Королевство.";
         } else {
-            DiscordUtils.sendMessage(defaultKingdomsChannel, ":fire: **" + k + "** is now an aggressor Kingdom");
-            inGame = "&6" + k + " &2is now an aggressor Kingdom.";
+            DiscordUtil.sendMessage(defaultKingdomsChannel, ":fire: **" + k + "** теперь военное Королевство");
+            inGame = "&6" + k + " &2теперь военное Королевство.";
         }
         
         Bukkit.getOnlinePlayers().forEach(p -> Utils.msg(p, inGame));
