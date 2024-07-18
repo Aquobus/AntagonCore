@@ -101,7 +101,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
             Button invite = Button.primary("invite","📩Discord");
             Button youtube = Button.link("https://www.youtube.com/@AntagonCreators","📩Youtube");
             String replyText = event.getOption("text").getAsString();
-            event.getHook().sendMessage(replyText).queue();
+            event.getHook().sendMessage(replyText).addActionRow(invite,youtube).queue();
             //event.reply(replyText).addActionRow(invite,youtube).queue();
             return;
         }
