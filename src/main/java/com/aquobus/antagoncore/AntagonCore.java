@@ -3,7 +3,6 @@ package com.aquobus.antagoncore;
 import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.discord_bot.DiscordCommandEvents;
-import com.aquobus.antagoncore.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.DiscordsrvListener;
