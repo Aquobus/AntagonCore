@@ -59,6 +59,7 @@ public class DiscordCommandDataUtils {
         return subcommandGroupData;
     }
 
+    @SuppressWarnings("null")
     public static OptionData toCommandData(Command.Option option) {
         OptionData optionData = new OptionData(option.getType(), option.getName(), option.getDescription(), option.isRequired());
         if (option.getType() == OptionType.NUMBER) {

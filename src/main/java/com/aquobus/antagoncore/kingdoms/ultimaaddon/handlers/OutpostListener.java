@@ -43,12 +43,12 @@ public class OutpostListener implements Listener {
     private static final Set<Structure> justRemoved = new HashSet<>();
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onOutpostBreak(KingdomItemBreakEvent<Structure> e) {
-        if (!(e.getKingdomItem() instanceof Structure)) {
+    public void onOutpostBreak(KingdomItemBreakEvent<Structure> event) {
+        if (!(event.getKingdomItem() instanceof Structure)) {
             return;
         }
 
-        Structure structure = e.getKingdomItem();
+        Structure structure = event.getKingdomItem();
         if (!structure.getNameOrDefault().equals("Outpost")) {
             return;
         }
@@ -60,7 +60,7 @@ public class OutpostListener implements Listener {
         }
 
         // Allow if structure was removed by Kingdoms or a player w/o kingdom
-        KingdomPlayer kp = e.getPlayer();
+        KingdomPlayer kp = event.getPlayer();
         if (kp == null || !kp.hasKingdom()) {
             return;
         }
@@ -69,8 +69,6 @@ public class OutpostListener implements Listener {
         if (!structure.getLand().isClaimed()) {
             return;
         }
-
-        e.setCancelled(true);
 
         // Must not be in war
         Player p = kp.getPlayer();
@@ -95,25 +93,25 @@ public class OutpostListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onOutpostPlace(PlayerInteractEvent e) {
+    public void onOutpostPlace(PlayerInteractEvent event) {
         // Check if item is kingdom item
-        Block b = e.getClickedBlock();
+        Block b = event.getClickedBlock();
         if (b == null) {
             return;
         }
 
         // Must be a right click (place) action 
-        if (!e.getAction().toString().contains("RIGHT")) {
+        if (!event.getAction().toString().contains("RIGHT")) {
             return;
         }
 
         // Must be able to place
-        Block pb = b.getRelative(e.getBlockFace());
+        Block pb = b.getRelative(event.getBlockFace());
         if (pb.getType() != Material.AIR) {
             return;
         }
 
-        ItemStack item = e.getItem();
+        ItemStack item = event.getItem();
         NBTWrappers.NBTTagCompound nbt = ItemNBT.getTag(item);
         nbt = nbt.getCompound(Kingdoms.NBT);
         if (nbt == null) {
@@ -129,14 +127,14 @@ public class OutpostListener implements Listener {
         // Hack to not let the method pass to Kingdoms by setting it to air
         // This works probably because the event stores a copy of the item
         // so when you set the type it doesn't affect the player(?)
-        e.setCancelled(true);
-        Player p = e.getPlayer();
+        event.setCancelled(true);
+        Player p = event.getPlayer();
         Material type = item.getType();
         item.setType(Material.AIR);
 
         // Only allow outpost to be placed on unclaimed land not in the end
         SimpleChunkLocation scl = SimpleChunkLocation.of(pb);
-        if (p.getWorld().getName().equals("world_the_end") || ServiceHandler.isInRegion(scl)) {
+        if (p.getWorld().getName().equals("world_the_end") || p.getWorld().getName().equals("world_the_nether") || ServiceHandler.isInRegion(scl)) {
             Utils.msg(p, "&cВы не можете создать здесь аванпост!");
             return;
         }
@@ -148,7 +146,7 @@ public class OutpostListener implements Listener {
         }
 
         if (land.isClaimed()) {
-            Utils.msg(e.getPlayer().getPlayer(), "&cВы можете размещать аванпосты только на невостребованных землях!");
+            Utils.msg(event.getPlayer().getPlayer(), "&cВы можете размещать аванпосты только на незаприваченных землях!");
             return;
         }
 
@@ -209,11 +207,11 @@ public class OutpostListener implements Listener {
         // Add metadata
         // ID is simply cur time, no way 2 people put an outpost at the same milisecond...
         StandardKingdomMetadata skm = new StandardKingdomMetadata(System.currentTimeMillis());
-        land.getMetadata().put(Utils.outpost_id, skm);
-        outpost.getMetadata().put(Utils.outpost_id, skm);
+        land.getMetadata().put(AntagonCore.outpost_id, skm);
+        outpost.getMetadata().put(AntagonCore.outpost_id, skm);
 
         // Remove item amount
-        ItemStack hand = p.getInventory().getItem(e.getHand());
+        ItemStack hand = p.getInventory().getItem(event.getHand());
         hand.setAmount(hand.getAmount() - 1);
 
         // Visualize lands
@@ -222,30 +220,30 @@ public class OutpostListener implements Listener {
 
     // Only allow claiming lands if nexus was placed/add outpost IDs
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onLandClaim(ClaimLandEvent e) {
+    public void onLandClaim(ClaimLandEvent event) {
         // Allow claiming if currently kingdom has 0 lands
-        Kingdom k = e.getKingdom();
+        Kingdom k = event.getKingdom();
         if (k.getLandLocations().size() == 0) {
             return;
         }
 
         // Also returns if this land was claimed through means of an outpost
-        if (e.getReason() == ClaimLandEvent.Reason.ADMIN) {
+        if (event.getReason() == ClaimLandEvent.Reason.ADMIN) {
             return;
         }
 
         // Must have a nexus
-        Player p = e.getPlayer().getPlayer();
+        Player p = event.getPlayer().getPlayer();
         if (k.getNexus() == null) {
-            e.setCancelled(true);
+            event.setCancelled(true);
             Utils.msg(p, "&cВы должны поставить Нексус с помощью &a/k nexus &c, прежде чем захватывать больше земель!");
             return;
         }
 
         // Disable claiming if there are no other claims in the same world
-        Set<SimpleChunkLocation> chunks = e.getLandLocations();
+        Set<SimpleChunkLocation> chunks = event.getLandLocations();
         if (!k.getLandLocations().stream().anyMatch(scl -> scl.getWorld().equals(p.getWorld().getName()))) {
-            e.setCancelled(true);
+            event.setCancelled(true);
             Utils.msg(p, "&cВаша земля должна быть присоединена к остальным землям королевства.");
             return;
         }
@@ -282,7 +280,7 @@ public class OutpostListener implements Listener {
                     }
 
                     // If any surrounding land doesn't have metadata, it means its a nexus land
-                    KingdomMetadata data = scll.getMetadata().get(Utils.outpost_id);
+                    KingdomMetadata data = scll.getMetadata().get(AntagonCore.outpost_id);
                     if (data == null) {
                         return;
                     }
@@ -295,9 +293,9 @@ public class OutpostListener implements Listener {
                 // We return after because invasions can only have 1 land claim at a time.
                 // Assign a negative outpost ID so that this land still works with custom disconnectLands
                 // function, and also to allow nexus to be moved to an invasion spot.
-                if (e.getReason() == ClaimLandEvent.Reason.INVASION && checked.size() == 8) {
+                if (event.getReason() == ClaimLandEvent.Reason.INVASION && checked.size() == 8) {
                     long ctime = System.currentTimeMillis();
-                    scl.getLand().getMetadata().put(Utils.outpost_id, new StandardKingdomMetadata(-1 * ctime));
+                    scl.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(-1 * ctime));
                     return;
                 }
             }
@@ -308,7 +306,7 @@ public class OutpostListener implements Listener {
 
             // If we got to this point, an outpost land must've been found. Then add the metadata to all claimed chunks
             long finalid = outpost_id;
-            chunks.forEach(c -> c.getLand().getMetadata().put(Utils.outpost_id, new StandardKingdomMetadata(finalid)));
+            chunks.forEach(c -> c.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(finalid)));
         }, 1);
     }
 
@@ -322,7 +320,7 @@ public class OutpostListener implements Listener {
 
         // Remove metadata
         e.getLandLocations().forEach(scl -> {
-            scl.getLand().getMetadata().remove(Utils.outpost_id);
+            scl.getLand().getMetadata().remove(AntagonCore.outpost_id);
         });
     }
 
@@ -353,7 +351,7 @@ public class OutpostListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onNexusMove(NexusMoveEvent e) {
         Land l = e.getTo().toSimpleChunkLocation().getLand();
-        KingdomMetadata meta = l.getMetadata().get(Utils.outpost_id);
+        KingdomMetadata meta = l.getMetadata().get(AntagonCore.outpost_id);
         if (meta == null) {
             return;
         }

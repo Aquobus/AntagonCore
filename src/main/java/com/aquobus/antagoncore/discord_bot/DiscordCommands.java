@@ -27,14 +27,12 @@ import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.Emoji;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.ButtonClickEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.SlashCommandEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.Button;
-import github.scarsz.discordsrv.dependencies.jda.api.interactions.components.ButtonInteraction;
 import org.bukkit.event.Listener;
 
 import java.lang.reflect.Field;
@@ -88,6 +86,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
 
     @SlashCommand(path = "echo", deferReply = true)
     public void echoCommand(SlashCommandEvent event) {
+        @SuppressWarnings("null")
         String replyText = event.getOption("text").getAsString().replaceAll("\\n","\n");
         event.getHook().sendMessage(replyText).queue();
     }
@@ -96,6 +95,7 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
     public void echoextendCommand(SlashCommandEvent event) {
         //Emoji tiktok = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:tiktok:946499645020979210>"));
         //Emoji youtube = Emoji.fromEmote(DiscordSRV.getPlugin().getMainGuild().getEmoteById("<:youtube:946499645020979210>"));
+        @SuppressWarnings("null")
         String replyText = event.getOption("text").getAsString().replaceAll("\\n","\n");
 
         event.getHook().sendMessage(replyText)
