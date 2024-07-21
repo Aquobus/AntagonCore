@@ -9,17 +9,27 @@ import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.DiscordsrvListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
+import com.aquobus.antagoncore.modules.resource_pack_save_load.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
     public static KingdomMetadataHandler shield_time;
     public FileConfiguration config = getConfig();
+
+    // Safe resource pack loading
+    public static ArrayList<Player> packLoaded;
+    private static AntagonCore instance;
+    public static AntagonCore getInstance(){
+        return instance;
+    }
 
     public static AntagonCore getPlugin() {
         return plugin;
@@ -41,9 +51,13 @@ public final class AntagonCore extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        instance = this;
 
         // Plugin startup logic
         saveDefaultConfig();
+        // Safe resource pack loading
+        packLoaded = new ArrayList<>();
+        getServer().getPluginManager().registerEvents(new LoadListener(), this);
         // Events register
         getServer().getPluginManager().registerEvents(new ElytraListener(), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(), this);
