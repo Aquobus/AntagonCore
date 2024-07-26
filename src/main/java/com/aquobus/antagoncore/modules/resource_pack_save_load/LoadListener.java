@@ -2,7 +2,6 @@ package com.aquobus.antagoncore.modules.resource_pack_save_load;
 
 import com.aquobus.antagoncore.AntagonCore;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +18,7 @@ public class LoadListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        p.setAllowFlight(true);
+        //p.setAllowFlight(true);
 
         for (Player loaded : Bukkit.getOnlinePlayers()) {
             loaded.hidePlayer(AntagonCore.getInstance(), p);
@@ -48,9 +47,9 @@ public class LoadListener implements Listener {
                     online.showPlayer(AntagonCore.getInstance(), p);
                 }
 
-                if (!p.getGameMode().equals(GameMode.CREATIVE)) {
-                    p.setAllowFlight(false);
-                }
+                //if (!p.getGameMode().equals(GameMode.CREATIVE)) {
+                //    p.setAllowFlight(false);
+                //}
             }, 10);
         }
     }
