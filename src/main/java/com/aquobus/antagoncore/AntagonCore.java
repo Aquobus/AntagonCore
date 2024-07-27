@@ -90,8 +90,5 @@ public final class AntagonCore extends JavaPlugin {
     public void onDisable() {
         getLogger().info("AntagonCore был отключен");
         //getServer().getLogger().info("AntagonCore был отключен");
-        DiscordSRV.api.unsubscribe(new DiscordReadyEvents());
-        DiscordSRV.api.unsubscribe(new DiscordCommandEvents());
-        DiscordSRV.api.unsubscribe(new DiscordCommands());
     }
 }
