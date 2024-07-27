@@ -1,7 +1,8 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers;
+package com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

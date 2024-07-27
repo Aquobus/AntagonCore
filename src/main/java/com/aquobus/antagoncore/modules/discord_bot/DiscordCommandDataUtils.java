@@ -18,7 +18,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aquobus.antagoncore.discord_bot;
+package com.aquobus.antagoncore.modules.discord_bot;
 
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.Command;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;

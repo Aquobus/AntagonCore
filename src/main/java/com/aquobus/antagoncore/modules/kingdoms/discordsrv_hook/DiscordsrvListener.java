@@ -1,10 +1,11 @@
 // Весь листенер отвечает за то чтобы добавить дополнительное взаимодействие с дискордом для кингдомсов
 
-package com.aquobus.antagoncore.kingdoms.discordsrv_hook;
+package com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.DiscordUtils;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.DiscordUtils;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.util.DiscordUtil;

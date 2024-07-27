@@ -2,14 +2,14 @@ package com.aquobus.antagoncore;
 
 import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
-import com.aquobus.antagoncore.discord_bot.DiscordCommandEvents;
-import com.aquobus.antagoncore.discord_bot.DiscordCommands;
-import com.aquobus.antagoncore.discord_bot.DiscordReadyEvents;
-import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
-import com.aquobus.antagoncore.kingdoms.discordsrv_hook.DiscordsrvListener;
 import com.aquobus.antagoncore.modules.antiElytra.ElytraListener;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
+import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
+import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
+import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
+import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
+import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -72,12 +72,19 @@ public final class AntagonCore extends JavaPlugin {
             packLoaded = new ArrayList<>();
             getServer().getPluginManager().registerEvents(new LoadListener(), this);
         }
-        getServer().getPluginManager().registerEvents(new OutpostListener(), this);
-        getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-        getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
-        DiscordSRV.api.subscribe(new DiscordReadyEvents());
-        DiscordSRV.api.subscribe(new DiscordCommandEvents());
-        DiscordSRV.api.subscribe(new DiscordCommands());
+        if (config.getBoolean("modules.outposts")) {
+            getServer().getPluginManager().registerEvents(new OutpostListener(), this);
+        }
+        if (config.getBoolean("modules.clanLimiter")) {
+            getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+        }
+        if (config.getBoolean("modules.discordsrvAddon")) {
+            getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+            DiscordSRV.api.subscribe(new DiscordReadyEvents());
+            DiscordSRV.api.subscribe(new DiscordCommandEvents());
+            DiscordSRV.api.subscribe(new DiscordCommands());
+        }
+
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
         // TabCompleter register

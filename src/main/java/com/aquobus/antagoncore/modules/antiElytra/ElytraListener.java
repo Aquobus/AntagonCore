@@ -1,7 +1,8 @@
 package com.aquobus.antagoncore.modules.antiElytra;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;

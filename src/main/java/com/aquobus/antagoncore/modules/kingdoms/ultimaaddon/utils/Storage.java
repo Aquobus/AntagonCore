@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
+package com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

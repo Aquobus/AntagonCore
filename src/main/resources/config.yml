@@ -2,6 +2,9 @@ modules:
   antiElytra: true
   fastMinecarts: true
   resourcePackSafeLoad: true
+  outposts: true
+  clanLimiter: true
+  discordsrvAddon: true
 kingdomSettings:
   disbandDelayHoursAfterLeavedPlayer: 24
   disbandDelayHours: 12

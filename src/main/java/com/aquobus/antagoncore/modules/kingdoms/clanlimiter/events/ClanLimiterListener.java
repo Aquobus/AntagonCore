@@ -1,7 +1,8 @@
-package com.aquobus.antagoncore.kingdoms.clanlimiter.events;
+package com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

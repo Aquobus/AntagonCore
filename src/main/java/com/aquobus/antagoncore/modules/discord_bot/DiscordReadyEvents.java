@@ -18,7 +18,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aquobus.antagoncore.discord_bot;
+package com.aquobus.antagoncore.modules.discord_bot;
 
 import com.aquobus.antagoncore.AntagonCore;
 import github.scarsz.discordsrv.DiscordSRV;

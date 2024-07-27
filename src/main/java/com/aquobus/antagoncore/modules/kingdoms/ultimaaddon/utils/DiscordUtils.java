@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.utils;
+package com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
