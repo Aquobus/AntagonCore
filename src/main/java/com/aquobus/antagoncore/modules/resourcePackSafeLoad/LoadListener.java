@@ -14,8 +14,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class LoadListener implements Listener {
+    private AntagonCore plugin;
+
+    public LoadListener(AntagonCore plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         Player p = e.getPlayer();
 
         //p.setAllowFlight(true);
@@ -31,6 +41,10 @@ public class LoadListener implements Listener {
 
     @EventHandler
     public void onPack(PlayerResourcePackStatusEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         Player p = e.getPlayer();
         PlayerResourcePackStatusEvent.Status status = e.getStatus();
         PlayerResourcePackStatusEvent.Status SUCCESSFULLY_LOADED = PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED;
@@ -57,30 +71,51 @@ public class LoadListener implements Listener {
     // Inventory Events
     @EventHandler
     public void invClick(InventoryClickEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (!AntagonCore.packLoaded.contains(e.getWhoClicked())) {
             e.setCancelled(true);
         }
     }
     @EventHandler
     public void invDrag(InventoryDragEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (!AntagonCore.packLoaded.contains(e.getWhoClicked())) {
             e.setCancelled(true);
         }
     }
     @EventHandler
     public void invSwapHands(PlayerSwapHandItemsEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (!AntagonCore.packLoaded.contains(e.getPlayer())) {
             e.setCancelled(true);
         }
     }
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void invPickupArrow(PlayerPickupArrowEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (!AntagonCore.packLoaded.contains(e.getPlayer())) {
             e.setCancelled(true);
         }
     }
     @EventHandler
     public void invPickupItem(EntityPickupItemEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             if (!AntagonCore.packLoaded.contains(p)) {
@@ -90,6 +125,10 @@ public class LoadListener implements Listener {
     }
     @EventHandler
     public void invOpen(InventoryOpenEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         Player p = (Player) e.getPlayer();
         if (!AntagonCore.packLoaded.contains(p)) {
             e.setCancelled(true);
@@ -97,6 +136,10 @@ public class LoadListener implements Listener {
     }
     @EventHandler
     public void invDropItem(PlayerDropItemEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         Player p = e.getPlayer();
         if (!AntagonCore.packLoaded.contains(p)) {
             e.setCancelled(true);
@@ -104,6 +147,10 @@ public class LoadListener implements Listener {
     }
     @EventHandler
     public void invInteract(PlayerInteractEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         Player p = e.getPlayer();
         if (!AntagonCore.packLoaded.contains(p)) {
             e.setCancelled(true);
@@ -113,6 +160,10 @@ public class LoadListener implements Listener {
     // Mobility events
     @EventHandler
     public void onDamaged(EntityDamageEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
             if (!AntagonCore.packLoaded.contains(p)) {
@@ -122,6 +173,10 @@ public class LoadListener implements Listener {
     }
     @EventHandler
     public void onDamageOthers(EntityDamageByEntityEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (e.getDamager() instanceof Player) {
             Player p = (Player) e.getDamager();
             if (!AntagonCore.packLoaded.contains(p)) {
@@ -131,6 +186,10 @@ public class LoadListener implements Listener {
     }
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (!AntagonCore.packLoaded.contains(e.getPlayer())) {
             e.setCancelled(true);
         }
@@ -139,6 +198,10 @@ public class LoadListener implements Listener {
     // Entity targeting
     @EventHandler
     public void onTarget(EntityTargetEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (e.getTarget() instanceof Player) {
             Player target = (Player) e.getTarget();
 
@@ -151,6 +214,10 @@ public class LoadListener implements Listener {
     // Health regen
     @EventHandler
     public void onRegen(EntityRegainHealthEvent e) {
+        if (!plugin.isResourcepackSafeLoadEnabled) {
+            return;
+        }
+
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
 

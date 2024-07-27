@@ -23,9 +23,18 @@ import java.util.Set;
 
 public class ElytraListener implements Listener {
     private static final Set<Player> elytraCancelling = new HashSet<>();
+    private AntagonCore plugin;
+
+    public ElytraListener(AntagonCore plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onElytra(EntityToggleGlideEvent event) {
+        if (!plugin.isAntiElytraEnabled) {
+            return;
+        }
+
         if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
@@ -51,6 +60,10 @@ public class ElytraListener implements Listener {
 
     @EventHandler
     public void onGlide(PlayerMoveEvent event) {
+        if (!plugin.isAntiElytraEnabled) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (elytraCancelling.contains(player)) {
             return;

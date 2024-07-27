@@ -1,7 +1,7 @@
 name: AntagonCore
 version: '${project.version}'
 main: com.aquobus.antagoncore.AntagonCore
-api-version: '1.20.4'
+api: '1.20'
 description: Main plugin for Antagon server
 softdepend:
   - Kingdoms

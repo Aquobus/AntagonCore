@@ -35,12 +35,19 @@ public class DiscordsrvListener implements Listener {
     private final TextChannel defaultKingdomsChannel = DiscordUtil.getTextChannelById(Utils.getConfigString("kingdomSettings.defaultKingdomsMessagesChannel"));
     private static final Map<Player, Integer> cantClose = new HashMap<>();
 
+    private AntagonCore plugin;
+
     public DiscordsrvListener(AntagonCore plugin) {
+        this.plugin = plugin;
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
     }
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
         UUID playerUUID = Objects.requireNonNull(kingdom.getKing().getPlayer()).getUniqueId();
         // .createRole() создаёт роль и записывает в хранилище
@@ -50,6 +57,10 @@ public class DiscordsrvListener implements Listener {
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomDisband(KingdomDisbandEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (event.isCancelled()) {
             return;
         }
@@ -64,6 +75,10 @@ public class DiscordsrvListener implements Listener {
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomKingChange(KingdomKingChangeEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (event.isCancelled()) {
             return;
         }
@@ -77,6 +92,10 @@ public class DiscordsrvListener implements Listener {
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onGroupRenameEvent(GroupRenameEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (event.isCancelled()) {
             return;
         }
@@ -90,6 +109,10 @@ public class DiscordsrvListener implements Listener {
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomJoin(KingdomJoinEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (event.isCancelled()) {
             return;
         }
@@ -106,9 +129,14 @@ public class DiscordsrvListener implements Listener {
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (event.isCancelled()) {
             return;
         }
+
         // Забрать роль "Название клана" у ливнувшего игрока
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
         Player player = Objects.requireNonNull(event.getPlayer().getPlayer());
@@ -123,6 +151,10 @@ public class DiscordsrvListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onShield(GroupShieldPurchaseEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         if (!(event.getGroup() instanceof Kingdom)) {
             return;
         }
@@ -141,6 +173,10 @@ public class DiscordsrvListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDisband(KingdomDisbandEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         Kingdom k = event.getKingdom();
         // k.getOnlineMembers().forEach(p -> Utils.closeInventory(p, "Challenge"));
         String name = k.getName();
@@ -155,6 +191,10 @@ public class DiscordsrvListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCreate(KingdomCreateEvent event) {
+        if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
+            return;
+        }
+
         Kingdom k = event.getKingdom();
         DiscordUtil.sendMessage(defaultKingdomsChannel, ":fleur_de_lis: **" + k.getName() + "** было создано");
         openSelectionGUI(k);

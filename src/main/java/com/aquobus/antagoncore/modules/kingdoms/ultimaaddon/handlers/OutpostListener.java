@@ -43,11 +43,21 @@ import java.util.UUID;
 public class OutpostListener implements Listener {
     private static final Set<Structure> justRemoved = new HashSet<>();
 
+    private AntagonCore plugin;
+
+    public OutpostListener(AntagonCore plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onOutpostBreak(KingdomItemBreakEvent<Structure> event) {
         //if (!(event.getKingdomItem() instanceof Structure)) {
         //    return;
         //}
+
+        if (!plugin.isKingdomsColoniesEnabled) {
+            return;
+        }
 
         Structure structure = event.getKingdomItem();
         if (!structure.getNameOrDefault().equals("Outpost")) {
@@ -93,8 +103,13 @@ public class OutpostListener implements Listener {
         });
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onOutpostPlace(PlayerInteractEvent event) {
+        if (!plugin.isKingdomsColoniesEnabled) {
+            return;
+        }
+
         // Check if item is kingdom item
         Block b = event.getClickedBlock();
         if (b == null) {
@@ -223,6 +238,10 @@ public class OutpostListener implements Listener {
     // Only allow claiming lands if nexus was placed/add outpost IDs
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onLandClaim(ClaimLandEvent event) {
+        if (!plugin.isKingdomsColoniesEnabled) {
+            return;
+        }
+
         // Allow claiming if currently kingdom has 0 lands
         Kingdom k = event.getKingdom();
         if (k.getLandLocations().isEmpty()) {
@@ -314,14 +333,18 @@ public class OutpostListener implements Listener {
 
     // Stop unclaiming of outpost chunk
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onUnclaim(UnclaimLandEvent e) {
+    public void onUnclaim(UnclaimLandEvent event) {
+        if (!plugin.isKingdomsColoniesEnabled) {
+            return;
+        }
+
         // This method checks if this event would unclaim an outpost
-        if (cancelUnclaim(e)) {
+        if (cancelUnclaim(event)) {
             return;
         }
 
         // Remove metadata
-        e.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(AntagonCore.outpost_id));
+        event.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(AntagonCore.outpost_id));
     }
 
     // Checks if a land can be unclaimed
@@ -349,8 +372,12 @@ public class OutpostListener implements Listener {
 
     // Disallow nexus to be moved to an outpost chunk
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onNexusMove(NexusMoveEvent e) {
-        Land l = e.getTo().toSimpleChunkLocation().getLand();
+    public void onNexusMove(NexusMoveEvent event) {
+        if (!plugin.isKingdomsColoniesEnabled) {
+            return;
+        }
+
+        Land l = event.getTo().toSimpleChunkLocation().getLand();
         KingdomMetadata meta = l.getMetadata().get(AntagonCore.outpost_id);
         if (meta == null) {
             return;
@@ -358,8 +385,8 @@ public class OutpostListener implements Listener {
 
         // Only check if meta is positive, meaning time > 0
         if (((StandardKingdomMetadata) meta).getLong() > 0) {
-            e.setCancelled(true);
-            Utils.msg(e.getPlayer().getPlayer(), "&cВы не можете поставить Нексус на территории аванпоста.");
+            event.setCancelled(true);
+            Utils.msg(event.getPlayer().getPlayer(), "&cВы не можете поставить Нексус на территории аванпоста.");
         }
     }
 }

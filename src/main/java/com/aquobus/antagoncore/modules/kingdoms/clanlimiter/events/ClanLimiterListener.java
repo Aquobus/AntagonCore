@@ -19,7 +19,11 @@ public class ClanLimiterListener implements Listener {
     private final int delayH;
     private final int delayHAfterLeave;
 
+    private AntagonCore plugin;
+
     public ClanLimiterListener(AntagonCore plugin) {
+        this.plugin = plugin;
+
         playerMinimum = plugin.config.getInt("kingdomSettings.disbandPlayerMinimum", 3);
         delayH = plugin.config.getInt("kingdomSettings.disbandDelayHours", 12);
         delayHAfterLeave = plugin.config.getInt("kingdomSettings.disbandDelayHoursAfterLeavedPlayer", 24);
@@ -27,11 +31,15 @@ public class ClanLimiterListener implements Listener {
 
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
+        if (!plugin.isKingdomsClanLimiterEnabled) {
+            return;
+        }
+
         Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
         Player player = kingdom.getKing().getPlayer();
         assert player != null;
 
-        player.sendMessage(String.format("Ваше величество, поздравляем с созданием королевства!\nНо учтите, что если в королевстве не наберется %s игроков,\n то через %s часов королевство &4будет уничтожено&r.", playerMinimum, delayHAfterLeave));
+        Utils.msg(player, String.format("Ваше величество, поздравляем с созданием королевства!\nНо учтите, что если в королевстве не наберется %s игроков,\n то через %s часов королевство &4будет уничтожено&r.", playerMinimum, delayHAfterLeave));
         /*
         TaskId.put(kingdom, scheduler.scheduleSyncDelayedTask(plugin, () -> {
             if (kingdom.getKingdomPlayers().size() < playerMinimum) {
@@ -56,6 +64,10 @@ public class ClanLimiterListener implements Listener {
 
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
+        if (!plugin.isKingdomsClanLimiterEnabled) {
+            return;
+        }
+
         Kingdom kingdom = event.getKingdom();
         Utils.scheduleAsync(72000*delayHAfterLeave, () -> {
             if (kingdom.getKingdomPlayers().size() < playerMinimum) {
@@ -63,7 +75,7 @@ public class ClanLimiterListener implements Listener {
                     Player player = kingdomPlayer.getPlayer();
                     if (player != null && player.isOnline()) {
                         player.sendMessage(
-                                String.format("Ваше королевство &4будет уничтожено&r через &6%s&r часов из-за недостаточного количества игроков.",delayHAfterLeave)
+                            String.format("Ваше королевство &4будет уничтожено&r через &6%s&r часов из-за недостаточного количества игроков.",delayHAfterLeave)
                         );
                     }
                 }

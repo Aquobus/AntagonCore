@@ -28,6 +28,14 @@ public final class AntagonCore extends JavaPlugin {
     public static KingdomMetadataHandler kHandler;
     public static KingdomMetadataHandler outpost_id;
 
+    public boolean isAntiElytraEnabled;
+    public boolean isDiscordsrvAddonEnabled;
+    public boolean isFastMinecartsEnabled;
+    public boolean isKingdomsClanLimiterEnabled;
+    public boolean isKingdomsDiscordsrvAddonEnabled;
+    public boolean isKingdomsColoniesEnabled;
+    public boolean isResourcepackSafeLoadEnabled;
+
     public FileConfiguration config = getConfig();
 
     // Safe resource pack loading
@@ -41,10 +49,22 @@ public final class AntagonCore extends JavaPlugin {
         return plugin;
     }
 
+    public void getModules() {
+        this.isAntiElytraEnabled                = config.getBoolean("modules.antiElytra");
+        this.isDiscordsrvAddonEnabled           = config.getBoolean("modules.discordsrv");
+        this.isFastMinecartsEnabled             = config.getBoolean("modules.fastMinecarts");
+        this.isKingdomsClanLimiterEnabled       = config.getBoolean("modules.clanLimiter");
+        this.isKingdomsDiscordsrvAddonEnabled   = config.getBoolean("modules.kingdomsDiscordsrv");
+        this.isKingdomsColoniesEnabled          = config.getBoolean("modules.outposts");
+        this.isResourcepackSafeLoadEnabled      = config.getBoolean("modules.resourcePackSafeLoad");
+    }
+
     public void reload() {
         reloadConfig();
         getConfig();
         this.config = getConfig();
+
+        getModules();
     }
 
     @Override
@@ -60,30 +80,22 @@ public final class AntagonCore extends JavaPlugin {
         // Plugin startup logic
         saveDefaultConfig();
         getConfig();
+        getModules();
         // Events register
-        if (config.getBoolean("modules.antiElytra")) {
-            getServer().getPluginManager().registerEvents(new ElytraListener(), this);
-        }
-        if (config.getBoolean("modules.fastMinecarts")) {
-            new FastMinecarts(this).loadFastMinecartsConfig();
-            getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
-        }
-        if (config.getBoolean("modules.resourcePackSafeLoad")) {
-            packLoaded = new ArrayList<>();
-            getServer().getPluginManager().registerEvents(new LoadListener(), this);
-        }
-        if (config.getBoolean("modules.outposts")) {
-            getServer().getPluginManager().registerEvents(new OutpostListener(), this);
-        }
-        if (config.getBoolean("modules.clanLimiter")) {
-            getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-        }
-        if (config.getBoolean("modules.discordsrvAddon")) {
-            getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
-            DiscordSRV.api.subscribe(new DiscordReadyEvents());
-            DiscordSRV.api.subscribe(new DiscordCommandEvents());
-            DiscordSRV.api.subscribe(new DiscordCommands());
-        }
+        getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
+        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
+        getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+
+        new FastMinecarts(this).loadFastMinecartsConfig();
+        getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
+
+        packLoaded = new ArrayList<>();
+        getServer().getPluginManager().registerEvents(new LoadListener(this), this);
+
+        getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+        DiscordSRV.api.subscribe(new DiscordReadyEvents());
+        DiscordSRV.api.subscribe(new DiscordCommandEvents());
+        DiscordSRV.api.subscribe(new DiscordCommands());
 
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
