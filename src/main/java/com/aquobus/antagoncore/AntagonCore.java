@@ -13,6 +13,7 @@ import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostList
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
@@ -60,10 +61,13 @@ public final class AntagonCore extends JavaPlugin {
     }
 
     public void reload() {
-        reloadConfig();
-        getConfig();
         this.config = getConfig();
 
+        // Создаём новый файл конфига если старого нет
+        if (config.getString("kingdomSettings.testConfig") == null) {
+            saveDefaultConfig();
+        }
+        reloadConfig();
         getModules();
     }
 

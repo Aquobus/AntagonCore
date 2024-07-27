@@ -40,13 +40,13 @@ public class LoadListener implements Listener {
     }
 
     @EventHandler
-    public void onPack(PlayerResourcePackStatusEvent e) {
+    public void onPack(PlayerResourcePackStatusEvent event) {
         if (!plugin.isResourcepackSafeLoadEnabled) {
             return;
         }
 
-        Player p = e.getPlayer();
-        PlayerResourcePackStatusEvent.Status status = e.getStatus();
+        Player p = event.getPlayer();
+        PlayerResourcePackStatusEvent.Status status = event.getStatus();
         PlayerResourcePackStatusEvent.Status SUCCESSFULLY_LOADED = PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED;
         PlayerResourcePackStatusEvent.Status DECLINED = PlayerResourcePackStatusEvent.Status.DECLINED;
         PlayerResourcePackStatusEvent.Status FAILED_DOWNLOAD = PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD;
