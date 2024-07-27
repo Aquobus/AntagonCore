@@ -9,7 +9,6 @@ import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.general.GroupDisband;
 import org.kingdoms.events.general.KingdomCreateEvent;
-import org.kingdoms.events.general.KingdomDisbandEvent;
 import org.kingdoms.events.members.KingdomLeaveEvent;
 
 import java.util.Objects;
@@ -52,16 +51,6 @@ public class ClanLimiterListener implements Listener {
                 }
             }
         });
-    }
-    @EventHandler
-    public void onKingdomDisband(KingdomDisbandEvent event) {
-//        Kingdom kingdom = Objects.requireNonNull(event.getKingdom());
-//        Player player = kingdom.getKing().getPlayer();
-//        assert player != null;
-//         Я переделал на использование асинхронной задачи т.е отмена задачи не имеет смысла и не экономит ресурсов
-//        if (TaskId.containsKey(event.getKingdom())) {
-//            scheduler.cancelTask(TaskId.get(event.getKingdom()));
-//        }
     }
 
     @EventHandler

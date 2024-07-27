@@ -12,18 +12,7 @@ import java.util.UUID;
 
 import static com.aquobus.antagoncore.AntagonCore.plugin;
 public class DiscordUtils {
-//    /**
-//     Добавляет роли каждому участнику списка из списка ролей
-//     @param members ArrayList из мембером класса Member
-//     @param roles ArrayList из ролей класса Role
-//     */
-//    public static void addRolesToMembers(ArrayList<Member> members, ArrayList<Role> roles) {
-//        for (Member member : members) {
-//            for (Role role : roles) {
-//                DiscordUtil.addRoleToMember(member, role);
-//            }
-//        }
-//    }
+
     /**
     @param PlayerUUID UUID игрока класса Player
     @return Класс Member
@@ -52,26 +41,12 @@ public class DiscordUtils {
         Bukkit.getLogger().info(String.format("AntagonCORE: Создана роль | Role: %s Name: %s", role, role.getName()));
     }
 
-    /**
-    Создаёт роль с названием клана, выставляет ей случайный цвет, сохраняет ID роли в конфиге плагина
-    @param kingdom Kingdom королевство для создания роли клана
-    */
-    // public static void renameRole(Kingdom kingdom) {
-    //     Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
-    //     String storageKingdomEntry = removeRole(kingdom, "Переименование");
-
-    //     removeEntryFromStorage(storageKingdomEntry);
-
-    //     Utils.scheduleAsync(100, () -> createRole(kingdom,"Переименование клана"));
-    // }
-
-    public static String removeRole(Kingdom kingdom, String reason) {
+    public static void removeRole(Kingdom kingdom, String reason) {
         String storageKingdomEntry = String.format("storage.%s", kingdom.getId());
         Role role = DiscordUtil.getRole(plugin.getConfig().getString(String.format("storage.%s.roleID", kingdom.getId())));
 
         role.delete().reason(reason).complete();
         Utils.removeEntryFromStorage(storageKingdomEntry);
 
-        return storageKingdomEntry;
     }
 }

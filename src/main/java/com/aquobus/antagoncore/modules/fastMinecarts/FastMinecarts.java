@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.modules.fast_minecarts;
+package com.aquobus.antagoncore.modules.fastMinecarts;
 
 import com.aquobus.antagoncore.AntagonCore;
 import org.bukkit.Material;

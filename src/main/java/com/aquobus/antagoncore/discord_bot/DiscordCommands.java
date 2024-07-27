@@ -125,7 +125,6 @@ public class DiscordCommands implements Listener, SlashCommandProvider {
                     .setEphemeral(true)
                     .sendMessage("[Ссылка на наш дискорд: https://discord.com/invite/ShkXXvSH9K](https://discord.com/invite/ShkXXvSH9K)")
                     .queue();
-            return;
         }
     }
 }

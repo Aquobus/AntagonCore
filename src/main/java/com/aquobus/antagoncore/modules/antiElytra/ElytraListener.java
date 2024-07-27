@@ -1,7 +1,9 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers;
+package com.aquobus.antagoncore.modules.antiElytra;
 
 import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -32,13 +34,18 @@ public class ElytraListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (!player.isInRain()) {
-            return;
-        }
 
-        event.setCancelled(true);
-        player.sendMessage("Элитры не могут быть использованы во время дождя");
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(player);
+        if (Boolean.parseBoolean(user.getCachedData().getMetaData().getMetaValue("cancelElytra"))) {
+            event.setCancelled(true);
+            Utils.msg(player,"&6Ваши элитры были &cотключены");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        }
+        if (player.isInRain()) {
+            event.setCancelled(true);
+            Utils.msg(player,"&6Элитры &cне могут быть использованы&6 во время дождя");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        }
     }
 
     @EventHandler
@@ -54,7 +61,7 @@ public class ElytraListener implements Listener {
 
         elytraCancelling.add(player);
         Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), () -> {
-            player.sendMessage(Utils.toComponent("&cКажется ваши элитры промокли..."));
+            player.sendMessage(Utils.toComponent("&6Кажется ваши элитры промокли..."));
             player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 2F, 0.8F);
             if (!player.isGliding()) {
                 elytraCancelling.remove(player);

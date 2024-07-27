@@ -7,10 +7,10 @@ import com.aquobus.antagoncore.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.DiscordsrvListener;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
+import com.aquobus.antagoncore.modules.antiElytra.ElytraListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
-import com.aquobus.antagoncore.modules.fast_minecarts.FastMinecarts;
-import com.aquobus.antagoncore.modules.resource_pack_save_load.LoadListener;
+import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
+import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -60,16 +60,21 @@ public final class AntagonCore extends JavaPlugin {
         // Plugin startup logic
         saveDefaultConfig();
         getConfig();
-        // Safe resource pack loading
-        packLoaded = new ArrayList<>();
-        getServer().getPluginManager().registerEvents(new LoadListener(), this);
         // Events register
-        getServer().getPluginManager().registerEvents(new ElytraListener(), this);
+        if (config.getBoolean("modules.antiElytra")) {
+            getServer().getPluginManager().registerEvents(new ElytraListener(), this);
+        }
+        if (config.getBoolean("modules.fastMinecarts")) {
+            new FastMinecarts(this).loadFastMinecartsConfig();
+            getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
+        }
+        if (config.getBoolean("modules.resourcePackSafeLoad")) {
+            packLoaded = new ArrayList<>();
+            getServer().getPluginManager().registerEvents(new LoadListener(), this);
+        }
         getServer().getPluginManager().registerEvents(new OutpostListener(), this);
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
-        new FastMinecarts(this).loadFastMinecartsConfig();
-        getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
         DiscordSRV.api.subscribe(new DiscordCommands());
@@ -78,11 +83,13 @@ public final class AntagonCore extends JavaPlugin {
         // TabCompleter register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setTabCompleter(new CommandCompleter());
 
-        getServer().getLogger().info("AntagonCore успешно был включен");
+        getLogger().info("AntagonCore успешно был включен");
+        //getServer().getLogger().info("AntagonCore успешно был включен");
     }
     @Override
     public void onDisable() {
-        getServer().getLogger().info("AntagonCore был отключен");
+        getLogger().info("AntagonCore был отключен");
+        //getServer().getLogger().info("AntagonCore был отключен");
         DiscordSRV.api.unsubscribe(new DiscordReadyEvents());
         DiscordSRV.api.unsubscribe(new DiscordCommandEvents());
         DiscordSRV.api.unsubscribe(new DiscordCommands());

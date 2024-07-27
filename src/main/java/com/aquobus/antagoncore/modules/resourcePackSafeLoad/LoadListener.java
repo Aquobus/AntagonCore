@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.modules.resource_pack_save_load;
+package com.aquobus.antagoncore.modules.resourcePackSafeLoad;
 
 import com.aquobus.antagoncore.AntagonCore;
 import org.bukkit.Bukkit;

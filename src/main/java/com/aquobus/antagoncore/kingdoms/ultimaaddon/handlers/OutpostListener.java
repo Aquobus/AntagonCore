@@ -44,9 +44,9 @@ public class OutpostListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onOutpostBreak(KingdomItemBreakEvent<Structure> event) {
-        if (!(event.getKingdomItem() instanceof Structure)) {
-            return;
-        }
+        //if (!(event.getKingdomItem() instanceof Structure)) {
+        //    return;
+        //}
 
         Structure structure = event.getKingdomItem();
         if (!structure.getNameOrDefault().equals("Outpost")) {
@@ -118,7 +118,7 @@ public class OutpostListener implements Listener {
             return;
         }
 
-        // Check if its a structure
+        // Check if it's a structure
         String tag = nbt.get(StructureType.METADATA, NBTType.STRING);
         if (tag == null || !tag.equals("outpost")) {
             return;
@@ -197,7 +197,8 @@ public class OutpostListener implements Listener {
         k.claim(scl, kp, ClaimLandEvent.Reason.ADMIN);
         StructureStyle outpostStyle = StructureRegistry.getStyle("outpost");
         Structure outpost = outpostStyle.getType().build(
-                new KingdomItemBuilder<Structure, StructureStyle, StructureType>(outpostStyle, SimpleLocation.of(pb), kp));
+                new KingdomItemBuilder<>(outpostStyle, SimpleLocation.of(pb), kp));
+                //new KingdomItemBuilder<Structure, StructureStyle, StructureType>(outpostStyle, SimpleLocation.of(pb), kp));
         land.getStructures().put(sl, outpost);
         outpost.spawnHolograms(k);
         outpost.playSound("place");
@@ -223,7 +224,7 @@ public class OutpostListener implements Listener {
     public void onLandClaim(ClaimLandEvent event) {
         // Allow claiming if currently kingdom has 0 lands
         Kingdom k = event.getKingdom();
-        if (k.getLandLocations().size() == 0) {
+        if (k.getLandLocations().isEmpty()) {
             return;
         }
 
@@ -242,7 +243,7 @@ public class OutpostListener implements Listener {
 
         // Disable claiming if there are no other claims in the same world
         Set<SimpleChunkLocation> chunks = event.getLandLocations();
-        if (!k.getLandLocations().stream().anyMatch(scl -> scl.getWorld().equals(p.getWorld().getName()))) {
+        if (k.getLandLocations().stream().noneMatch(scl -> scl.getWorld().equals(p.getWorld().getName()))) {
             event.setCancelled(true);
             Utils.msg(p, "&cВаша земля должна быть присоединена к остальным землям королевства.");
             return;
@@ -319,9 +320,7 @@ public class OutpostListener implements Listener {
         }
 
         // Remove metadata
-        e.getLandLocations().forEach(scl -> {
-            scl.getLand().getMetadata().remove(AntagonCore.outpost_id);
-        });
+        e.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(AntagonCore.outpost_id));
     }
 
     // Checks if a land can be unclaimed
