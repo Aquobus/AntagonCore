@@ -32,14 +32,14 @@ import java.util.UUID;
 
 public class DiscordsrvListener implements Listener {
     private final Role roleOnCreation;
-    private final TextChannel defaultKingdomsChannel = DiscordUtil.getTextChannelById(Utils.getConfigString("kingdomSettings.defaultKingdomsMessagesChannel"));
+    private final TextChannel defaultKingdomsChannel = DiscordUtil.getTextChannelById(Utils.getConfigString("discord.defaultKingdomsMessagesChannel"));
     private static final Map<Player, Integer> cantClose = new HashMap<>();
 
     private AntagonCore plugin;
 
     public DiscordsrvListener(AntagonCore plugin) {
         this.plugin = plugin;
-        roleOnCreation = DiscordUtil.getRole(plugin.config.getString("kingdomSettings.giveDiscordRoleOnKingdomCreation"));
+        roleOnCreation = DiscordUtil.getRole(plugin.config.getString("discord.giveDiscordRoleOnKingdomCreation"));
     }
     // REVIEW: Проверить работоспособность
     @EventHandler

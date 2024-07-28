@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.aquobus.antagoncore.modules.luckpermstable.utils.Discord;
+import com.aquobus.antagoncore.modules.luckpermstable.utils.DiscordUtils;
 
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.luckperms.api.model.group.Group;
@@ -28,7 +28,7 @@ public class PlayerRightsListener implements Listener{
 
         // Проверяет, получил ли игрок ноду опки
         if (userNodes.stream().anyMatch(n -> n.getKey().equals("*"))) {
-            Discord.sendEmbedLog(null, String.format("Игрок %s получил опку. Несанкционированный доступ?", user.getUsername()));
+            DiscordUtils.sendEmbedLog(null, String.format("Игрок %s получил опку. Несанкционированный доступ?", user.getUsername()));
             
             for (Node node : userNodes) {
                 if (node.getKey().equals("*")) {

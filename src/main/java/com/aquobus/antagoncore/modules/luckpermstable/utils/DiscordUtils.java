@@ -11,7 +11,7 @@ import github.scarsz.discordsrv.dependencies.jda.api.EmbedBuilder;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 
-public class Discord {
+public class DiscordUtils {
     private static AntagonCore plugin = AntagonCore.getPlugin();
     private static long logChannelId = plugin.getConfig().getLong("");
     private static long adminRoleId = plugin.getConfig().getLong("");
