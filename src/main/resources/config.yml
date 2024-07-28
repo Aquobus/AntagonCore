@@ -6,6 +6,7 @@ modules:
   outposts: true
   clanLimiter: true
   kingdomsDiscordsrv: true
+  luckPerms: true
 kingdomSettings:
   disbandDelayHoursAfterLeavedPlayer: 24
   disbandDelayHours: 12
@@ -14,6 +15,7 @@ kingdomSettings:
 discord:
   giveDiscordRoleOnKingdomCreation: 1049047181308473395
   defaultKingdomsMessagesChannel: 1247907261616230440
+  luckPermsChannel: 1267094442049929247
 minecartSpeed:
   COPPER_BLOCK: 2.0
   CUT_COPPER: 2.0

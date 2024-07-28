@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.modules.luckpermstable.utils.DiscordUtils;
 
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
@@ -13,8 +14,18 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 
 public class PlayerRightsListener implements Listener{
+    private AntagonCore plugin;
+
+    public PlayerRightsListener(AntagonCore plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onUserDataRecalculate(UserDataRecalculateEvent event) {
+        if (!plugin.isLuckPermsCheckerEnabled) {
+            return;
+        }
+
         User user = event.getUser();
 
         // Получение текущих прав пользователя

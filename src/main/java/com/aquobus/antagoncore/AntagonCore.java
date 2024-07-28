@@ -10,6 +10,7 @@ import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
 import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
+import com.aquobus.antagoncore.modules.luckpermstable.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
@@ -40,6 +41,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isKingdomsDiscordsrvAddonEnabled;
     public boolean isKingdomsColoniesEnabled;
     public boolean isResourcepackSafeLoadEnabled;
+    public boolean isLuckPermsCheckerEnabled;
 
     public FileConfiguration config = getConfig();
     public LuckPerms api;
@@ -64,6 +66,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isKingdomsDiscordsrvAddonEnabled   = config.getBoolean("modules.kingdomsDiscordsrv");
         this.isKingdomsColoniesEnabled          = config.getBoolean("modules.outposts");
         this.isResourcepackSafeLoadEnabled      = config.getBoolean("modules.resourcePackSafeLoad");
+        this.isLuckPermsCheckerEnabled          = config.getBoolean("modules.luckPerms");
     }
 
     public void reload() {
@@ -100,6 +103,7 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
 
         new FastMinecarts(this).loadFastMinecartsConfig();
         getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
