@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.modules.luckpermstable.utils;
+package com.aquobus.antagoncore.modules.luckperms.utils;
 
 import javax.annotation.Nullable;
 import java.awt.Color;

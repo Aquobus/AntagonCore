@@ -10,7 +10,7 @@ import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
 import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
-import com.aquobus.antagoncore.modules.luckpermstable.PlayerRightsListener;
+import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;

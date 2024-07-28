@@ -1,4 +1,4 @@
-package com.aquobus.antagoncore.modules.luckpermstable;
+package com.aquobus.antagoncore.modules.luckperms;
 
 import java.util.Collection;
 
@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.modules.luckpermstable.utils.DiscordUtils;
+import com.aquobus.antagoncore.modules.luckperms.utils.DiscordUtils;
 
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.luckperms.api.model.group.Group;
