@@ -11,6 +11,7 @@ kingdomSettings:
   disbandDelayHours: 12
   disbandPlayerMinimum: 3
   TestConfig: Lorem Ipsum
+discord:
   giveDiscordRoleOnKingdomCreation: 1049047181308473395
   defaultKingdomsMessagesChannel: 1247907261616230440
 minecartSpeed:

@@ -6,6 +6,7 @@ description: Main plugin for Antagon server
 softdepend:
   - Kingdoms
   - DiscordSRV
+  - LuckPerms
 commands:
   antagoncore:
     description: Главная команда для плагина AntagonCore

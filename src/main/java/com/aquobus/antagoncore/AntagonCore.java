@@ -12,9 +12,12 @@ import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListen
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
+import net.luckperms.api.LuckPerms;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
@@ -28,6 +31,7 @@ public final class AntagonCore extends JavaPlugin {
     public static KingdomMetadataHandler shield_time;
     public static KingdomMetadataHandler kHandler;
     public static KingdomMetadataHandler outpost_id;
+    public static RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
 
     public boolean isAntiElytraEnabled;
     public boolean isDiscordsrvAddonEnabled;
@@ -38,10 +42,12 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isResourcepackSafeLoadEnabled;
 
     public FileConfiguration config = getConfig();
+    public LuckPerms api;
 
     // Safe resource pack loading
     public static ArrayList<Player> packLoaded;
     private static AntagonCore instance;
+
     public static AntagonCore getInstance(){
         return instance;
     }
@@ -77,6 +83,11 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Luckperms enabling
+        if (provider != null) {
+            this.api = provider.getProvider();
+        }
+
         plugin = this;
         instance = this;
         outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
