@@ -4,3 +4,4 @@ AntagonCore dependencies:
 - KingdomsX
 - DiscordSRV
 - LuckPerms
+- Oraxen

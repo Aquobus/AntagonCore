@@ -16,8 +16,10 @@ import java.util.Map;
 
 public class FastMinecarts implements Listener {
     private final ConfigurationSection minecartSpeed;
+    private AntagonCore plugin;
 
     public FastMinecarts(AntagonCore plugin) {
+        this.plugin = plugin;
         minecartSpeed = plugin.config.getConfigurationSection("minecartSpeed");
     }
 
@@ -47,6 +49,8 @@ public class FastMinecarts implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onVehicleMove(VehicleMoveEvent event) {
+        if (!plugin.isFastMinecartsEnabled) return;
+
         if (!(event.getVehicle() instanceof Minecart)) return;
 
         Minecart minecart = (Minecart) event.getVehicle();
@@ -63,6 +67,7 @@ public class FastMinecarts implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onVehicleExit(VehicleExitEvent event) {
+        if (!plugin.isFastMinecartsEnabled) return;
         if (!(event.getVehicle() instanceof Minecart)) return;
         if (!(event.getExited() instanceof Player)) return;
 

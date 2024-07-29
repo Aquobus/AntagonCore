@@ -63,7 +63,7 @@
           <id>Scarsz-Nexus</id>
           <url>https://nexus.scarsz.me/content/groups/public/</url>
       </repository>
-
+      
       <!-- bukkit -->
       <repository>
           <id>spigot-repo</id>
