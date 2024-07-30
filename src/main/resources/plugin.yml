@@ -3,6 +3,10 @@ version: '${project.version}'
 main: com.aquobus.antagoncore.AntagonCore
 api-version: '1.20'
 description: Main plugin for Antagon server
+softdepend:
+  - KingdomsX
+  - DiscordSRV
+  - LuckPerms
 commands:
   antagoncore:
     description: Главная команда для плагина AntagonCore

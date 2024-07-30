@@ -7,9 +7,7 @@ import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
-import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
-import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
@@ -20,8 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
-import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
-import org.kingdoms.constants.namespace.Namespace;
 
 import java.util.ArrayList;
 import java.util.Objects;
