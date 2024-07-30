@@ -7,7 +7,9 @@ import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
+import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
@@ -18,6 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
+import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
+import org.kingdoms.constants.namespace.Namespace;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -68,10 +72,11 @@ public final class AntagonCore extends JavaPlugin {
         this.config = getConfig();
 
         // Создаём новый файл конфига если его версия устарела
-        if (config.getInt("version") > 1 || config.getInt("version") != 1) {
-            saveDefaultConfig();
+        if (config.getInt("version", 0) < 1) {
+            getLogger().info("Обновление конфигурационного файла до стандартной версии.");
+            saveDefaultConfig(); // сохраняет стандартный конфиг и перезаписывает
+            reloadConfig(); // заново загружает конфиг
         }
-        reloadConfig();
         getModules();
     }
 
@@ -84,10 +89,7 @@ public final class AntagonCore extends JavaPlugin {
         plugin = this;
         instance = this;
         // Plugin startup logic
-        getConfig();
-        if (config.getInt("version") > 1 || config.getInt("version") != 1) {
-            saveDefaultConfig();
-        }
+        reload();
         getModules();
         // Events register
         if (isAntiElytraEnabled) {
@@ -108,8 +110,9 @@ public final class AntagonCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
         }
         if (isFastMinecartsEnabled) {
-            new FastMinecarts(this).loadFastMinecartsConfig();
-            getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
+            new FastMinecarts(this);
+            //new FastMinecarts(this).loadFastMinecartsConfig();
+            //getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
         }
         if (isResourcepackSafeLoadEnabled) {
             packLoaded = new ArrayList<>();
