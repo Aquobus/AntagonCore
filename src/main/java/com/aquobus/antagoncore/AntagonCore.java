@@ -75,8 +75,8 @@ public final class AntagonCore extends JavaPlugin {
         if (config.getInt("version", 0) < 1) {
             getLogger().info("Обновление конфигурационного файла до стандартной версии.");
             saveDefaultConfig(); // сохраняет стандартный конфиг и перезаписывает
-            reloadConfig(); // заново загружает конфиг
         }
+        reloadConfig(); // заново загружает конфиг
         getModules();
     }
 
@@ -109,7 +109,7 @@ public final class AntagonCore extends JavaPlugin {
         new FastMinecarts(this);
         //new FastMinecarts(this).loadFastMinecartsConfig();
         //getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
-        
+
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
         DiscordSRV.api.subscribe(new DiscordCommands());

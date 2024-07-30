@@ -1,7 +1,8 @@
 package com.aquobus.antagoncore.commands;
 
 import com.aquobus.antagoncore.AntagonCore;
-import org.bukkit.Color;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ACore implements CommandExecutor {
-    public final AntagonCore plugin;
+    public AntagonCore plugin;
 
     public ACore(AntagonCore plugin) {
         this.plugin = plugin;
@@ -22,11 +23,15 @@ public class ACore implements CommandExecutor {
 
             Player player = (Player) sender;
             if (args[0].equalsIgnoreCase("reload")) {
-                this.plugin.reload();
-                player.sendMessage(Color.GREEN + "Плагин был перезагружен!");
+                plugin.reload();
+                Utils.msg(player, "&aПлагин был успешно перезагружен!");
+
                 return true;
             } else if (args[0].equalsIgnoreCase("test")) {
                 player.sendMessage("test: " + plugin.config.getString("kingdomSettings.TestConfig"));
+                Utils.msg(player, "test: " + plugin.config.getString("kingdomSettings.TestConfig"));
+
+                return true;
             }
         }
 
