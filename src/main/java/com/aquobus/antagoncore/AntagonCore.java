@@ -7,22 +7,17 @@ import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
-import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
-import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.kingdoms.constants.metadata.KingdomMetadataHandler;
-import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
-import org.kingdoms.constants.namespace.Namespace;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -72,8 +67,8 @@ public final class AntagonCore extends JavaPlugin {
     public void reload() {
         this.config = getConfig();
 
-        // Создаём новый файл конфига если старого нет
-        if (config.getString("kingdomSettings.testConfig") == null) {
+        // Создаём новый файл конфига если его версия устарела
+        if (config.getInt("version") > 1 || config.getInt("version") != 1) {
             saveDefaultConfig();
         }
         reloadConfig();
@@ -86,36 +81,48 @@ public final class AntagonCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Luckperms enabling
-        if (provider != null) {
-            this.api = provider.getProvider();
-        }
-
         plugin = this;
         instance = this;
-        outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
-        kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
         // Plugin startup logic
-        saveDefaultConfig();
         getConfig();
+        if (config.getInt("version") > 1 || config.getInt("version") != 1) {
+            saveDefaultConfig();
+        }
         getModules();
         // Events register
-        getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
-        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
-        getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
-
-        new FastMinecarts(this).loadFastMinecartsConfig();
-        getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
-
-        packLoaded = new ArrayList<>();
-        getServer().getPluginManager().registerEvents(new LoadListener(this), this);
-
-        getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
-        DiscordSRV.api.subscribe(new DiscordReadyEvents());
-        DiscordSRV.api.subscribe(new DiscordCommandEvents());
-        DiscordSRV.api.subscribe(new DiscordCommands());
-
+        if (isAntiElytraEnabled) {
+            getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
+        }
+//        if (isKingdomsColoniesEnabled) {
+//            outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
+//            kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
+//            getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
+//        }
+//        if (isKingdomsClanLimiterEnabled) {
+//            getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+//        }
+        if (isLuckPermsCheckerEnabled){
+            if (provider != null) {
+                this.api = provider.getProvider();
+            }
+            getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
+        }
+        if (isFastMinecartsEnabled) {
+            new FastMinecarts(this).loadFastMinecartsConfig();
+            getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
+        }
+        if (isResourcepackSafeLoadEnabled) {
+            packLoaded = new ArrayList<>();
+            getServer().getPluginManager().registerEvents(new LoadListener(this), this);
+        }
+        if (isKingdomsDiscordsrvAddonEnabled) {
+            getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+        }
+        if (isDiscordsrvAddonEnabled) {
+            DiscordSRV.api.subscribe(new DiscordReadyEvents());
+            DiscordSRV.api.subscribe(new DiscordCommandEvents());
+            DiscordSRV.api.subscribe(new DiscordCommands());
+        }
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
         // TabCompleter register

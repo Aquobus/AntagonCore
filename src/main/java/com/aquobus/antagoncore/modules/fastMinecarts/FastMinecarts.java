@@ -1,7 +1,9 @@
 package com.aquobus.antagoncore.modules.fastMinecarts;
 
 import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -16,7 +18,7 @@ import java.util.Map;
 
 public class FastMinecarts implements Listener {
     private final ConfigurationSection minecartSpeed;
-    private AntagonCore plugin;
+    private final AntagonCore plugin;
 
     public FastMinecarts(AntagonCore plugin) {
         this.plugin = plugin;
@@ -39,12 +41,6 @@ public class FastMinecarts implements Listener {
                 _blockMaxSpeeds.put(material, minecartSpeed.getDouble(key));
             }
         }
-        for (String key : minecartSpeed.getKeys(false)) {
-            Material material = Material.getMaterial(key);
-            if (material != null) {
-                _blockMaxSpeeds.put(material, minecartSpeed.getDouble(key));
-            }
-        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -57,12 +53,20 @@ public class FastMinecarts implements Listener {
         if (minecart.isEmpty()) return;
         if (!(minecart.getPassengers().get(0) instanceof Player)) return;
 
-        Material railBlockType = event.getVehicle().getLocation().getBlock().getType();
-        if (!railTypes.contains(railBlockType)) return;
+        //Material railBlockType = event.getVehicle().getLocation().getBlock().getType();
+        Block railBlock = event.getVehicle().getLocation().getBlock();
+        if (!railTypes.contains(railBlock.getType())) return;
 
-        Material blockBelowType = event.getVehicle().getLocation().getBlock().getRelative(0, -1, 0).getType();
+        Material blockBelowType = railBlock.getRelative(0, -1, 0).getType();
         double blockMultiplier = _blockMaxSpeeds.getOrDefault(blockBelowType, VANILLA_MAX_SPEED);
         minecart.setMaxSpeed(blockMultiplier);
+
+        for (Player player : event.getVehicle().getLocation().getNearbyPlayers(1)) {
+            if (_blockMaxSpeeds.containsKey(blockBelowType)){
+                Utils.msg(player, String.format("Максимальная скорость %s Тип блока %s",minecart.getMaxSpeed(),blockBelowType));
+                Utils.msg(player, String.format("%s",_blockMaxSpeeds.get(blockBelowType)));
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -77,3 +81,4 @@ public class FastMinecarts implements Listener {
         }
     }
 }
+
