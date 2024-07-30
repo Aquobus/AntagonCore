@@ -4,7 +4,7 @@ main: com.aquobus.antagoncore.AntagonCore
 api-version: '1.20'
 description: Main plugin for Antagon server
 softdepend:
-  - KingdomsX
+  - Kingdoms
   - DiscordSRV
   - LuckPerms
 commands:
