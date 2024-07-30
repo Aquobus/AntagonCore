@@ -28,7 +28,6 @@ public class ACore implements CommandExecutor {
 
                 return true;
             } else if (args[0].equalsIgnoreCase("test")) {
-                player.sendMessage("test: " + plugin.config.getString("kingdomSettings.TestConfig"));
                 Utils.msg(player, "test: " + plugin.config.getString("kingdomSettings.TestConfig"));
 
                 return true;
