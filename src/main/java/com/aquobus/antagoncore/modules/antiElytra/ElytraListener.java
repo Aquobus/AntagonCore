@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class ElytraListener implements Listener {
     private static final Set<Player> elytraCancelling = new HashSet<>();
-    private AntagonCore plugin;
+    private final AntagonCore plugin;
 
     public ElytraListener(AntagonCore plugin) {
         this.plugin = plugin;

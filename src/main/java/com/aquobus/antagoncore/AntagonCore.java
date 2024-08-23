@@ -36,6 +36,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isAntiElytraEnabled;
     public boolean isDiscordsrvAddonEnabled;
     public boolean isFastMinecartsEnabled;
+    public boolean isFastDirtPathEnabled;
     public boolean isKingdomsClanLimiterEnabled;
     public boolean isKingdomsDiscordsrvAddonEnabled;
     public boolean isKingdomsColoniesEnabled;
@@ -61,6 +62,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isAntiElytraEnabled                = config.getBoolean("modules.antiElytra");
         this.isDiscordsrvAddonEnabled           = config.getBoolean("modules.discordsrv");
         this.isFastMinecartsEnabled             = config.getBoolean("modules.fastMinecarts");
+        this.isFastDirtPathEnabled              = config.getBoolean("modules.fastDirtPath");
         this.isKingdomsClanLimiterEnabled       = config.getBoolean("modules.clanLimiter");
         this.isKingdomsDiscordsrvAddonEnabled   = config.getBoolean("modules.kingdomsDiscordsrv");
         this.isKingdomsColoniesEnabled          = config.getBoolean("modules.outposts");
@@ -92,9 +94,15 @@ public final class AntagonCore extends JavaPlugin {
         outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
         kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
         packLoaded = new ArrayList<>();
+
         // Plugin startup logic
         reload();
-        getModules();
+        //getModules();
+
+        if (provider != null) {
+            this.api = provider.getProvider();
+        }
+
         // Events register
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
@@ -103,12 +111,7 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LoadListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
 
-        if (provider != null) {
-            this.api = provider.getProvider();
-        }
         new FastMinecarts(this);
-        //new FastMinecarts(this).loadFastMinecartsConfig();
-        //getServer().getPluginManager().registerEvents(new FastMinecarts(this), this);
 
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
