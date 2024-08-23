@@ -1,6 +1,7 @@
 package com.aquobus.antagoncore.modules.fastDirtPath;
 
 import com.aquobus.antagoncore.AntagonCore;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -23,13 +24,16 @@ public class FastDirtPath implements Listener {
         if (!plugin.isFastDirtPathEnabled) {
             return;
         }
+        if (event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+            return;
+        }
+
         Player player = event.getPlayer();
-        Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-
+        Block block = player.getLocation().getBlock().getRelative(0, 0, 0);
         if (block.getType() == Material.DIRT_PATH & !player.hasPotionEffect(PotionEffectType.SPEED)) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0, false, false, false));
-
-            player.getLocation().getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 3);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, 0, false, false, false));
+            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(200, 200, 200), 0.5F);
+            player.spawnParticle(Particle.REDSTONE, player.getLocation(), 3, dustOptions);
         }
     }
 }

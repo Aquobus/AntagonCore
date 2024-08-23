@@ -7,6 +7,7 @@ import com.aquobus.antagoncore.modules.betterLeaves.BetterLeaves;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
+import com.aquobus.antagoncore.modules.fastDirtPath.FastDirtPath;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
 import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
@@ -100,7 +101,7 @@ public final class AntagonCore extends JavaPlugin {
 
         // Plugin startup logic
         reload();
-        //getModules();
+        getModules();
 
         if (provider != null) {
             this.api = provider.getProvider();
@@ -108,6 +109,7 @@ public final class AntagonCore extends JavaPlugin {
 
         // Events register
         getServer().getPluginManager().registerEvents(new BetterLeaves(this), this);
+        getServer().getPluginManager().registerEvents(new FastDirtPath(this), this);
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);

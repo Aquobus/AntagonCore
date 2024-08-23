@@ -1,6 +1,7 @@
 package com.aquobus.antagoncore.modules.betterLeaves;
 
 import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -61,6 +62,7 @@ public class BetterLeaves implements Listener {
 //        }
 
         if (leavesTypes.contains(from.getBlock().getType()) || leavesTypes.contains(to.getBlock().getType())) {
+            Utils.msg(player,"вы на листве");
             boolean canPassThrough = !to.clone().subtract(0, 1, 0).getBlock().getType().equals(Material.AIR);
 
             if (canPassThrough) {
