@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Objects;
+
 public class FastDirtPath implements Listener {
     private final AntagonCore plugin;
 
@@ -24,16 +26,20 @@ public class FastDirtPath implements Listener {
         if (!plugin.isFastDirtPathEnabled) {
             return;
         }
-        if (event.getFrom().getBlock().equals(event.getTo().getBlock())) {
-            return;
-        }
 
         Player player = event.getPlayer();
         Block block = player.getLocation().getBlock().getRelative(0, 0, 0);
-        if (block.getType() == Material.DIRT_PATH & !player.hasPotionEffect(PotionEffectType.SPEED)) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, 0, false, false, false));
-            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(200, 200, 200), 0.5F);
+        if (block.getType() == Material.DIRT_PATH) {
+            if (event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+                return;
+            }
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0, false, false, false));
+            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(200, 200, 200), 1.5F);
             player.spawnParticle(Particle.REDSTONE, player.getLocation(), 3, dustOptions);
+            if (Objects.requireNonNull(player.getPotionEffect(PotionEffectType.SPEED)).getDuration() < 16) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0, false, false, false));
+                player.spawnParticle(Particle.REDSTONE, player.getLocation(), 3, dustOptions);
+            }
         }
     }
 }
