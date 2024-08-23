@@ -3,6 +3,7 @@ package com.aquobus.antagoncore;
 import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.modules.antiElytra.ElytraListener;
+import com.aquobus.antagoncore.modules.betterLeaves.BetterLeaves;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
 import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
@@ -34,6 +35,7 @@ public final class AntagonCore extends JavaPlugin {
     public static RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
 
     public boolean isAntiElytraEnabled;
+    public boolean isBetterLeavesEnabled;
     public boolean isDiscordsrvAddonEnabled;
     public boolean isFastMinecartsEnabled;
     public boolean isFastDirtPathEnabled;
@@ -60,6 +62,7 @@ public final class AntagonCore extends JavaPlugin {
 
     public void getModules() {
         this.isAntiElytraEnabled                = config.getBoolean("modules.antiElytra");
+        this.isBetterLeavesEnabled                = config.getBoolean("modules.betterLeaves");
         this.isDiscordsrvAddonEnabled           = config.getBoolean("modules.discordsrv");
         this.isFastMinecartsEnabled             = config.getBoolean("modules.fastMinecarts");
         this.isFastDirtPathEnabled              = config.getBoolean("modules.fastDirtPath");
@@ -104,6 +107,7 @@ public final class AntagonCore extends JavaPlugin {
         }
 
         // Events register
+        getServer().getPluginManager().registerEvents(new BetterLeaves(this), this);
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);

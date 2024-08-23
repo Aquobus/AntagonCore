@@ -2,6 +2,8 @@ version: 2
 modules:
   # Disable elytra while player try to fly in rain
   antiElytra: true
+  # Allow player walk through leaves blocks
+  betterLeaves: true
   # Change max speed of minecart depending on block below
   fastMinecarts: true
   # Give speed to player running on Dirt Path block
