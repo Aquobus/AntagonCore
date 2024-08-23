@@ -1,4 +1,4 @@
-version: 1
+version: 2
 modules:
   # Disable elytra while player try to fly in rain
   antiElytra: true

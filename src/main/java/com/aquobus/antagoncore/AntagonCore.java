@@ -74,7 +74,7 @@ public final class AntagonCore extends JavaPlugin {
         this.config = getConfig();
 
         // Создаём новый файл конфига если его версия устарела
-        if (config.getInt("version", 0) < 1) {
+        if (config.getInt("version", 0) < 2) {
             getLogger().info("Обновление конфигурационного файла до стандартной версии.");
             saveDefaultConfig(); // сохраняет стандартный конфиг и перезаписывает
         }
