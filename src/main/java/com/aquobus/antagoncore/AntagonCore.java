@@ -12,6 +12,7 @@ import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
 import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
+import com.aquobus.antagoncore.modules.lightningToGlass.LightningToGlass;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import github.scarsz.discordsrv.DiscordSRV;
@@ -45,6 +46,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isKingdomsColoniesEnabled;
     public boolean isResourcepackSafeLoadEnabled;
     public boolean isLuckPermsCheckerEnabled;
+    public boolean isLightningToGlassEnabled;
 
     public FileConfiguration config = getConfig();
     public LuckPerms api;
@@ -63,7 +65,7 @@ public final class AntagonCore extends JavaPlugin {
 
     public void getModules() {
         this.isAntiElytraEnabled                = config.getBoolean("modules.antiElytra");
-        this.isBetterLeavesEnabled                = config.getBoolean("modules.betterLeaves");
+        this.isBetterLeavesEnabled              = config.getBoolean("modules.betterLeaves");
         this.isDiscordsrvAddonEnabled           = config.getBoolean("modules.discordsrv");
         this.isFastMinecartsEnabled             = config.getBoolean("modules.fastMinecarts");
         this.isFastDirtPathEnabled              = config.getBoolean("modules.fastDirtPath");
@@ -72,6 +74,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isKingdomsColoniesEnabled          = config.getBoolean("modules.outposts");
         this.isResourcepackSafeLoadEnabled      = config.getBoolean("modules.resourcePackSafeLoad");
         this.isLuckPermsCheckerEnabled          = config.getBoolean("modules.luckPerms");
+        this.isLightningToGlassEnabled          = config.getBoolean("modules.lightningToGlass");
     }
 
     public void reload() {
@@ -116,6 +119,7 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
         getServer().getPluginManager().registerEvents(new LoadListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+        getServer().getPluginManager().registerEvents(new LightningToGlass(this), this);
 
         new FastMinecarts(this);
 
