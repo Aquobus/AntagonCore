@@ -22,6 +22,8 @@ modules:
   luckPerms: true
   # Convert sand and blocks in radius to glass after lighting hits it
   lightningToGlass: true
+  # Villagers can ride on Camels and Llamas
+  villagerTransportation: true
 kingdomSettings:
   # Amount of hours after plugin disband kingdom if amount of players after leaved player lower than {disbandPlayerMinimum}
   disbandDelayHoursAfterLeavedPlayer: 24

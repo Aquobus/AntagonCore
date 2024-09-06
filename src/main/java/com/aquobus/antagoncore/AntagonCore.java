@@ -47,7 +47,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isResourcepackSafeLoadEnabled;
     public boolean isLuckPermsCheckerEnabled;
     public boolean isLightningToGlassEnabled;
-
+    public boolean isVillagerTransportationEnabled;
     public FileConfiguration config = getConfig();
     public LuckPerms api;
 
@@ -75,6 +75,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isResourcepackSafeLoadEnabled      = config.getBoolean("modules.resourcePackSafeLoad");
         this.isLuckPermsCheckerEnabled          = config.getBoolean("modules.luckPerms");
         this.isLightningToGlassEnabled          = config.getBoolean("modules.lightningToGlass");
+        this.isVillagerTransportationEnabled    = config.getBoolean("modules.villagerTransportation");
     }
 
     public void reload() {
@@ -134,9 +135,9 @@ public final class AntagonCore extends JavaPlugin {
         getLogger().info("AntagonCore успешно был включен");
         //getServer().getLogger().info("AntagonCore успешно был включен");
     }
+    
     @Override
     public void onDisable() {
         getLogger().info("AntagonCore был отключен");
-        //getServer().getLogger().info("AntagonCore был отключен");
     }
 }
