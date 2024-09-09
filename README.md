@@ -20,22 +20,30 @@ AntagonCore dependencies:
 [antiElytra](src/main/java/com/aquobus/antagoncore/modules/antiElytra/ElytraListener.java):
 > Disables elytra to player while raining.
 > Disables elytra if luckperms condition is met.
+
 (beta) [betterLeaves](src/main/java/com/aquobus/antagoncore/modules/betterLeaves/BetterLeaves.java):
 > Allows player walk through leaves and fall through them, except leaves which hasn't blocks below
+
 [discord_bot](src/main/java/com/aquobus/antagoncore/modules/discord_bot):
 > Extend DiscordSRV functional
 [fastDirtPath](src/main/java/com/aquobus/antagoncore/modules/fastDirtPath/FastDirtPath.java):
 > Player running on dirt_path block gain speed effect and summon particles on feet
+
 [fastMinecarts](src/main/java/com/aquobus/antagoncore/modules/fastMinecarts/FastMinecarts.java):
 > Extend minecart speed looking on block below
+
 [kingdoms](src/main/java/com/aquobus/antagoncore/modules/kingdoms):
 > Check the code
+
 [lightningToGlass](src/main/java/com/aquobus/antagoncore/modules/lightningToGlass/LightningToGlass.java):
 > Replace sand with glass where lightning_bolt was spawn
+
 [luckperms](src/main/java/com/aquobus/antagoncore/modules/luckperms):
 > Security fixes
+
 [resourcePackSafeLoad](src/main/java/com/aquobus/antagoncore/modules/resourcePackSafeLoad):
-> Gives blind, invincibility and cancel move for player while they loading server resource pack
+> Gives blind, invincibility and cancel move for player while they loading server resource 
+
 [villagerTransportation](src/main/java/com/aquobus/antagoncore/modules/villagerTransportation):
 > Extend minecart vehicle functional by allowing llamas and camels to ride villagers
 > Thanks [Villager Transportation datapack](https://modrinth.com/datapack/villager-transportation) for the idea
