@@ -1,3 +1,12 @@
+<p align="left">
+    <a href="https://www.gnu.org/licenses/gpl-3.0" alt=GPLv3>
+        <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
+    <a href="https://github.com/Aquobus/AntagonCore/pulse" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/m/Aquobus/AntagonCore?color=dark-green" /></a>
+    <a href="https://discord.gg/5tQ5PqKet6">
+        <img src="https://img.shields.io/discord/946499645020979210?logo=discord&logoColor=white"
+            alt="Chat on Discord"></a>
+</p>
 # AntagonCore
 AntagonCore is a bridge-plugin between many plugins, staying on Antagon server.
 AntagonCore dependencies:
