@@ -53,8 +53,8 @@ To build this plugin download source code with some IDE (we use IntelliJ IDEA) a
 If you build plugin you can drop it in your server "plugins" folder 
 
 ## Conspiration
-Thanks to datapack creator [Jaffthry](https://modrinth.com/user/Jaffthry) which datapack we used as idea for villagerTransportation module
-Thanks to UltimaAddons
+Thanks to datapack creator [Jaffthry](https://modrinth.com/user/Jaffthry) which datapack we used as idea for [villagerTransportation](src/main/java/com/aquobus/antagoncore/modules/villagerTransportation) module
+Thanks to UltimaAddons which code we modify to adjust for our ideas in [kingdoms](src/main/java/com/aquobus/antagoncore/modules/kingdoms) module
 
 ## License
 Copyright (C) 2024 by Antagon
