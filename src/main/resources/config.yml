@@ -24,6 +24,8 @@ modules:
   lightningToGlass: true
   # Villagers can ride on Camels and Llamas
   villagerTransportation: true
+  # Minecart hurts entity when collide with them
+  minecartDamage: true
 kingdomSettings:
   # Amount of hours after plugin disband kingdom if amount of players after leaved player lower than {disbandPlayerMinimum}
   disbandDelayHoursAfterLeavedPlayer: 24
@@ -63,5 +65,7 @@ minecartSpeed:
   DIRT: 0.35
   GRAVEL: 0.3
   SOUL_SAND: 0.2
+# Other
+minecaftDamage: 5
 # Never try to edit this part manually
 storage:

@@ -1,6 +1,7 @@
 package com.aquobus.antagoncore.modules.lightningToGlass;
 
 import com.aquobus.antagoncore.AntagonCore;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,17 +25,15 @@ public class LightningToGlass implements Listener {
         Location location = event.getLightning().getLocation();
         Block block = location.getBlock();
 
-        if (block.getType() == Material.SAND) {
-            int x = block.getX();
-            int y = block.getY();
-            int z = block.getZ();
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
 
-            for (int dx = -1; dx <= 1; dx++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    Block surroundingBlock = event.getLightning().getWorld().getBlockAt(x + dx, y, z + dz);
-                    if (surroundingBlock.getType() == Material.SAND) {
-                        surroundingBlock.setType(Material.GLASS);
-                    }
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                Block surroundingBlock = event.getLightning().getWorld().getBlockAt(x + dx, y-1, z + dz);
+                if (surroundingBlock.getType() == Material.SAND || surroundingBlock.getType() == Material.SANDSTONE) {
+                    surroundingBlock.setType(Material.GLASS);
                 }
             }
         }
