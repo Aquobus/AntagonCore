@@ -16,6 +16,8 @@ import com.aquobus.antagoncore.modules.lightningToGlass.LightningToGlass;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.minecartHurtEntity.minecartHurtsEntityListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
+import com.aquobus.antagoncore.modules.villagerTransportation.VillagerTransportation;
+
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -50,6 +52,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isLightningToGlassEnabled;
     public boolean isVillagerTransportationEnabled;
     public boolean isMinecartDamageEnabled;
+    public boolean isMultiBowlEnabled;
     public FileConfiguration config = getConfig();
     public LuckPerms api;
 
@@ -79,6 +82,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isLightningToGlassEnabled          = config.getBoolean("modules.lightningToGlass");
         this.isVillagerTransportationEnabled    = config.getBoolean("modules.villagerTransportation");
         this.isMinecartDamageEnabled            = config.getBoolean("modules.minecartDamage");
+        this.isMultiBowlEnabled                 = config.getBoolean("modules.multiBowl");
     }
 
     public void reload() {
@@ -125,6 +129,7 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         getServer().getPluginManager().registerEvents(new LightningToGlass(this), this);
         getServer().getPluginManager().registerEvents(new minecartHurtsEntityListener(this), this);
+        getServer().getPluginManager().registerEvents(new VillagerTransportation(this), this);
 
         new FastMinecarts(this);
 

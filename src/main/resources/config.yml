@@ -26,6 +26,8 @@ modules:
   villagerTransportation: true
   # Minecart hurts entity when collide with them
   minecartDamage: true
+  # Multi bowl usage
+  multiBowl: true
 kingdomSettings:
   # Amount of hours after plugin disband kingdom if amount of players after leaved player lower than {disbandPlayerMinimum}
   disbandDelayHoursAfterLeavedPlayer: 24
