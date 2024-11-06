@@ -1,7 +1,7 @@
 name: AntagonCore
 version: '${project.version}'
 main: com.aquobus.antagoncore.AntagonCore
-api-version: '1.20'
+api-version: '1.21'
 description: Main plugin for Antagon server
 softdepend:
   - Kingdoms
@@ -15,3 +15,9 @@ commands:
       - anc
       - ac
       - acore
+    permission: antagoncore.admin
+    permission-message: У вас нет разрешения на использование этой команды!
+permissions:
+  antagoncore.admin:
+    description: Allows to use antagoncore commands
+    default: op

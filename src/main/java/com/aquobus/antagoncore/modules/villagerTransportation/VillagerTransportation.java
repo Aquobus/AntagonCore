@@ -8,9 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Camel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import com.aquobus.antagoncore.AntagonCore;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
@@ -31,30 +29,50 @@ public class VillagerTransportation implements Listener {
     }
 
     @EventHandler
-    public void onVehicleMove(EntityMountEvent event) {
+    public void onCamelMove(EntityMoveEvent event) {
         if (!plugin.isVillagerTransportationEnabled) {
             return;
         }
 
         Entity vehicle = event.getEntity();
-        
-        // Проверка изменения местоположения
-        // if (event.getFrom().distance(event.getTo()) < moveThreshold) {
-        //     return; // Выход, если движение незначительное
-        // }
 
-        if (vehicle instanceof Camel) {
-            Camel camel = (Camel) vehicle;
-            if (camel.getPassengers().get(0) instanceof Player && camel.getPassengers().size() == 1) {
-                handleVehiclePassengerChange(camel);
-            }
+        if (!(vehicle instanceof Camel)) {
+            return;
         }
 
-        if (vehicle instanceof Llama) {
-            Llama llama = (Llama) vehicle;
-            if (llama.isLeashed() && llama.isEmpty()) {
-                handleVehiclePassengerChange(llama);
-            }
+        if (event.getFrom().distance(event.getTo()) < moveThreshold) {
+            return;
+        }
+
+        Camel camel = (Camel) vehicle;
+
+        if (camel.getPassengers().get(0) instanceof Player && camel.getPassengers().size() == 1) {
+            handleVehiclePassengerChange(camel);
+        }
+
+        Bukkit.getLogger().warning(String.format("AntagonCore: entity vehicle: %s", vehicle));
+
+    }
+    @EventHandler
+    public void onLlamaMove(EntityMoveEvent event) {
+        if (!plugin.isVillagerTransportationEnabled) {
+            return;
+        }
+
+        Entity vehicle = event.getEntity();
+
+        if (!(vehicle instanceof Llama)) {
+            return;
+        }
+
+        if (event.getFrom().distance(event.getTo()) < moveThreshold) {
+            return;
+        }
+
+        Llama llama = (Llama) vehicle;
+
+        if (llama.isLeashed() && llama.isEmpty()) {
+            handleVehiclePassengerChange(llama);
         }
     }
 
@@ -62,19 +80,14 @@ public class VillagerTransportation implements Listener {
         Villager nearestVillager = findNearestVillager(vehicle);
         if (nearestVillager != null) { 
             nearestVillager.addPassenger(vehicle);
-            Bukkit.getLogger().info("ближайший житель подобрался!");
         }
     }
 
     private Villager findNearestVillager(Entity vehicle) {
-        Villager villager = vehicle.getWorld().getNearbyEntitiesByType(Villager.class, vehicle.getLocation(), 1.0).stream()
+        return vehicle.getWorld().getNearbyEntitiesByType(Villager.class, vehicle.getLocation(), 1.0).stream()
             .filter(entity -> !transportationCooldown.contains(entity.getUniqueId()))
             .findFirst()
             .orElse(null);
-
-        Bukkit.getLogger().info("ближайший житель нашёлся!");
-
-        return villager;
     }
     
     @EventHandler
@@ -87,8 +100,6 @@ public class VillagerTransportation implements Listener {
                 villager.eject();
                 transportationCooldown.add(villager.getUniqueId());
                 Utils.scheduleAsync(100, () -> transportationCooldown.remove(villager.getUniqueId()));
-
-                Bukkit.getLogger().info("житель посадился!");
             }
         }
     }

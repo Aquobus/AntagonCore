@@ -17,6 +17,7 @@ import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.minecartHurtEntity.minecartHurtsEntityListener;
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import com.aquobus.antagoncore.modules.villagerTransportation.VillagerTransportation;
+import com.aquobus.antagoncore.modules.woodBurnedToCoal.woodBurnedToCoalEvent;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
@@ -53,6 +54,7 @@ public final class AntagonCore extends JavaPlugin {
     public boolean isVillagerTransportationEnabled;
     public boolean isMinecartDamageEnabled;
     public boolean isMultiBowlEnabled;
+    public boolean isWoodBurnedToCoalEnabled;
     public FileConfiguration config = getConfig();
     public LuckPerms api;
 
@@ -83,6 +85,7 @@ public final class AntagonCore extends JavaPlugin {
         this.isVillagerTransportationEnabled    = config.getBoolean("modules.villagerTransportation");
         this.isMinecartDamageEnabled            = config.getBoolean("modules.minecartDamage");
         this.isMultiBowlEnabled                 = config.getBoolean("modules.multiBowl");
+        this.isWoodBurnedToCoalEnabled          = config.getBoolean("modules.woodBurnedToCoal");
     }
 
     public void reload() {
@@ -130,6 +133,7 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LightningToGlass(this), this);
         getServer().getPluginManager().registerEvents(new minecartHurtsEntityListener(this), this);
         getServer().getPluginManager().registerEvents(new VillagerTransportation(this), this);
+        getServer().getPluginManager().registerEvents(new woodBurnedToCoalEvent(this), this);
 
         new FastMinecarts(this);
 
