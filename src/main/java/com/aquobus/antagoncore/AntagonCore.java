@@ -6,6 +6,8 @@ import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
 import com.aquobus.antagoncore.kingdoms.discordsrv_hook.KingdomCreateListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.ElytraListener;
 import com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers.OutpostListener;
+import com.aquobus.antagoncore.player.PlayerInteractionListener;
+import com.aquobus.antagoncore.player.PlayerInteractionPlaceholders;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,7 +41,12 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
         getServer().getPluginManager().registerEvents(new KingdomCreateListener(this), this);
-        
+        getServer().getPluginManager().registerEvents(new PlayerInteractionListener(this), this);
+
+        // Register PlaceholderAPI expansion if available
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PlayerInteractionPlaceholders(this).register();
+        }
 
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
