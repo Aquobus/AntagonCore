@@ -12,7 +12,6 @@
 AntagonCore is a core plugin for minecraft server Antagon.
 It uses API of these plugins to extend some functionallity:
 AntagonCore dependencies:
-- [KingdomsX](https://github.com/CryptoMorin/KingdomsX) [SpigotMC](https://www.spigotmc.org/resources/kingdomsx.77670/)
 - [DiscordSRV](https://github.com/DiscordSRV/DiscordSRV) [SpigotMC](https://www.spigotmc.org/resources/discordsrv.18494/)
 - [LuckPerms](https://github.com/LuckPerms/LuckPerms) [SpigotMC](https://www.spigotmc.org/resources/kingdomsx.77670/)
 
