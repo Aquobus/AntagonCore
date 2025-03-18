@@ -1,4 +1,6 @@
 /shelf/
 /workspace.xml
 /.idea/
+/.vscode/
 /target/
+/dependency-reduced-pom.xml

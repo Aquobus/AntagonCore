@@ -1,8 +1,10 @@
-package com.aquobus.antagoncore.kingdoms.ultimaaddon.handlers;
+package com.aquobus.antagoncore.modules.antiElytra;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,8 +18,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.ultimaaddon.utils.Utils;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ElytraListener implements Listener {
     private final AntagonCore plugin;
@@ -29,6 +31,10 @@ public class ElytraListener implements Listener {
 
     @EventHandler
     public void onElytra(EntityToggleGlideEvent event) {
+        if (!plugin.isAntiElytraEnabled) {
+            return;
+        }
+
         if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
@@ -38,17 +44,26 @@ public class ElytraListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        if (!player.isInRain()) {
-            return;
-        }
 
-        event.setCancelled(true);
-        player.sendMessage("Элитры не могут быть использованы во время дождя");
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        User user = LuckPermsProvider.get().getPlayerAdapter(Player.class).getUser(player);
+        if (Boolean.parseBoolean(user.getCachedData().getMetaData().getMetaValue("cancelElytra"))) {
+            event.setCancelled(true);
+            Utils.msg(player,"&6Ваши элитры были &cотключены");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        }
+        if (player.isInRain()) {
+            event.setCancelled(true);
+            Utils.msg(player,"&6Элитры &cне могут быть использованы&6 во время дождя");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1F, 1F);
+        }
     }
 
     @EventHandler
     public void onGlide(PlayerMoveEvent event) {
+        if (!plugin.isAntiElytraEnabled) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (elytraCancelling.contains(player)) {
             return;
@@ -59,8 +74,8 @@ public class ElytraListener implements Listener {
         }
 
         elytraCancelling.add(player);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            player.sendMessage(Utils.toComponent("&cКажется ваши элитры промокли..."));
+        Bukkit.getScheduler().runTaskLater(AntagonCore.getPlugin(), () -> {
+            player.sendMessage(Utils.toComponent("&6Кажется ваши элитры промокли..."));
             player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 2F, 0.8F);
             if (!player.isGliding()) {
                 elytraCancelling.remove(player);
@@ -78,7 +93,7 @@ public class ElytraListener implements Listener {
                     player.setGliding(false);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 25, 0, true, false));
                 }
-            }.runTaskTimer(plugin, 20, 20);
+            }.runTaskTimer(AntagonCore.getPlugin(), 20, 20);
         }, 20);
     }
 }

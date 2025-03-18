@@ -1,6 +1,75 @@
+version: 2
+modules:
+  # Disable elytra while player try to fly in rain
+  antiElytra: true
+  # Allow player walk through leaves blocks
+  betterLeaves: true
+  # Change max speed of minecart depending on block below
+  fastMinecarts: true
+  # Give speed to player running on Dirt Path block
+  fastDirtPath: true
+  # Invincibility for players which loads server resource pack
+  resourcePackSafeLoad: true
+  #
+  discordsrv: true
+  #
+  outposts: true
+  #
+  clanLimiter: true
+  #
+  kingdomsDiscordsrv: true
+  #
+  luckPerms: true
+  # Convert sand and blocks in radius to glass after lighting hits it
+  lightningToGlass: true
+  # Villagers can ride on Camels and Llamas
+  # villagerTransportation: true
+  # Minecart hurts entity when collide with them
+  minecartDamage: true
+  # Multi bowl usage
+  multiBowl: true
+  # Is burned block of tree drops coal
+  woodBurnedToCoal: true
 kingdomSettings:
+  # Amount of hours after plugin disband kingdom if amount of players after leaved player lower than {disbandPlayerMinimum}
   disbandDelayHoursAfterLeavedPlayer: 24
+  # Amount of hours after plugin disband kingdom if amount of players lower than {disbandPlayerMinimum} after user create kingdom
   disbandDelayHours: 12
+  # Threshold for kingdom to disband after certain conditions
   disbandPlayerMinimum: 3
+  # Just test
   TestConfig: Lorem Ipsum
+discord:
+  # Discord guild's role ID to give kingdom leader after kingdom creation
   giveDiscordRoleOnKingdomCreation: 1049047181308473395
+  # Discord guild's channel ID where send some information
+  defaultKingdomsMessagesChannel: 1247907261616230440
+  # Discord guild's chat to send critical issues or exploits in player rights
+  luckPermsChannel: 1267094442049929247
+# List of blocks which change MAX_SPEED setting of minecart
+# Default for all non-listed blocks: 0.4
+minecartSpeed:
+  COPPER_BLOCK: 2.0
+  CUT_COPPER: 2.0
+  WAXED_COPPER_BLOCK: 1.9
+  WAXED_CUT_COPPER: 1.9
+  GOLD_BLOCK: 1.75
+  EXPOSED_COPPER: 1.75
+  EXPOSED_CUT_COPPER: 1.75
+  WAXED_EXPOSED_COPPER: 1.65
+  WAXED_EXPOSED_CUT_COPPER: 1.65
+  WEATHERED_COPPER: 1.5
+  WEATHERED_CUT_COPPER: 1.5
+  WAXED_WEATHERED_COPPER: 1.4
+  WAXED_WEATHERED_CUT_COPPER: 1.4
+  OXIDIZED_COPPER: 1.25
+  OXIDIZED_CUT_COPPER: 1.25
+  WAXED_OXIDIZED_COPPER: 1.15
+  WAXED_OXIDIZED_CUT_COPPER: 1.15
+  DIRT: 0.35
+  GRAVEL: 0.3
+  SOUL_SAND: 0.2
+# Other
+minecaftDamage: 5
+# Never try to edit this part manually
+storage:
