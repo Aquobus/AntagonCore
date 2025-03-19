@@ -123,12 +123,17 @@ public final class AntagonCore extends JavaPlugin {
             this.api = provider.getProvider();
         }
 
+        if (getServer().getPluginManager().isPluginEnabled("Kingdoms")) {
+            outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
+            kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
+        }
+
         // Events register
         getServer().getPluginManager().registerEvents(new BetterLeaves(this), this);
         getServer().getPluginManager().registerEvents(new FastDirtPath(this), this);
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
-        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
-        getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+        //getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
+        //getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
         getServer().getPluginManager().registerEvents(new LoadListener(this), this);
         getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
@@ -137,8 +142,6 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VillagerTransportation(this), this);
         getServer().getPluginManager().registerEvents(new woodBurnedToCoalEvent(this), this);
 
-        new FastMinecarts(this);
-
         /*
          * Один из худших вариантов реализации включения/отключения фичи
          * В буд. я это удалю; но пока так, потому что нету гребанного файла,
@@ -146,6 +149,18 @@ public final class AntagonCore extends JavaPlugin {
          *
          * TODO: Create a class where these 'ifs' will be implemented
          */
+        if (getServer().getPluginManager().isPluginEnabled("Kingdoms")) {
+            getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
+            getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
+            
+            if (getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
+                getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+            }
+        }
+
+        new FastMinecarts(this);
+
+        // TODO: Create a class where these 'ifs' will be implemented
         // Register player interaction feature if enabled
         if (config.getBoolean("modules.playerInteraction", true)) {
             getServer().getLogger().info("Enabling Player Interaction feature");
