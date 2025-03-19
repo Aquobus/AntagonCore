@@ -26,16 +26,27 @@ public class PlayerInteractionPlaceholders extends PlaceholderExpansion {
     
     @Override
     public String getVersion() {
-        return "1.3.4";
+        return "1.3.5";
     }
     
     @Override
     public boolean persist() {
         return true;
     }
+
+    @Override
+    public boolean canRegister() {
+        // Only register if the feature is enabled in config
+        return plugin.getConfig().getBoolean("modules.playerInteraction", true);
+    }
     
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
+        // Double-check if the feature is enabled
+        if (!plugin.getConfig().getBoolean("modules.playerInteraction", true)) {
+            return "Feature disabled";
+        }
+        
         if (player == null) {
             return "";
         }

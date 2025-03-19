@@ -18,6 +18,11 @@ public class PlayerInteractionListener implements Listener {
     
     @EventHandler
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
+        // Check if the feature is enabled in config
+        if (!plugin.getConfig().getBoolean("modules.playerInteraction", true)) {
+            return;
+        }
+        
         Player player = event.getPlayer();
         Entity target = event.getRightClicked();
         

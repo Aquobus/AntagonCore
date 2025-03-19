@@ -18,6 +18,8 @@ import com.aquobus.antagoncore.modules.minecartHurtEntity.minecartHurtsEntityLis
 import com.aquobus.antagoncore.modules.resourcePackSafeLoad.LoadListener;
 import com.aquobus.antagoncore.modules.villagerTransportation.VillagerTransportation;
 import com.aquobus.antagoncore.modules.woodBurnedToCoal.woodBurnedToCoalEvent;
+import com.aquobus.antagoncore.player.PlayerInteractionListener;
+import com.aquobus.antagoncore.player.PlayerInteractionPlaceholders;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
@@ -136,6 +138,24 @@ public final class AntagonCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new woodBurnedToCoalEvent(this), this);
 
         new FastMinecarts(this);
+
+        /*
+         * Один из худших вариантов реализации включения/отключения фичи
+         * В буд. я это удалю; но пока так, потому что нету гребанного файла,
+         * где это должно инициализироваться. С нуля писать сейчас мне лень.
+         *
+         * TODO: Create a class where these 'ifs' will be implemented
+         */
+        // Register player interaction feature if enabled
+        if (config.getBoolean("modules.playerInteraction", true)) {
+            getServer().getLogger().info("Enabling Player Interaction feature");
+            getServer().getPluginManager().registerEvents(new PlayerInteractionListener(this), this);
+            
+            // Register PlaceholderAPI expansion if available
+            if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                new PlayerInteractionPlaceholders(this).register();
+            }
+        }
 
         DiscordSRV.api.subscribe(new DiscordReadyEvents());
         DiscordSRV.api.subscribe(new DiscordCommandEvents());
