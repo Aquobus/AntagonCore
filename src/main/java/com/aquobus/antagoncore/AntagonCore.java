@@ -33,8 +33,6 @@ import org.kingdoms.constants.namespace.Namespace;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import java.util.Objects;
-
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
     public static KingdomMetadataHandler shield_time;

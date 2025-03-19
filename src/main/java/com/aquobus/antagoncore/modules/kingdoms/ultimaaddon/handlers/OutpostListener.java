@@ -38,9 +38,8 @@ import org.kingdoms.utils.nbt.ItemNBT;
 import org.kingdoms.utils.nbt.NBTType;
 import org.kingdoms.utils.nbt.NBTWrappers;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 
 public class OutpostListener implements Listener {
     private static final Set<Structure> justRemoved = new HashSet<>();
@@ -54,7 +53,7 @@ public class OutpostListener implements Listener {
     public void onOutpostBreak(KingdomItemBreakEvent<Structure> e) {
         e.getKingdomItem();
 
-        Structure structure = event.getKingdomItem();
+        Structure structure = e.getKingdomItem();
         if (!structure.getNameOrDefault().equals("Outpost")) {
             return;
         }
@@ -66,7 +65,7 @@ public class OutpostListener implements Listener {
         }
 
         // Allow if structure was removed by Kingdoms or a player w/o kingdom
-        KingdomPlayer kp = event.getPlayer();
+        KingdomPlayer kp = e.getPlayer();
         if (kp == null || !kp.hasKingdom()) {
             return;
         }
