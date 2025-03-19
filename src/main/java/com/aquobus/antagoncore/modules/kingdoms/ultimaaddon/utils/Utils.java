@@ -40,7 +40,7 @@ public class Utils {
     }
 
     public static String getLastChallenge(Kingdom kingdom) {
-        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get(AntagonCore.kHandler);
+        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get("last_challenge");
         return skm == null ? null : skm.getString();
     }
 
@@ -82,7 +82,7 @@ public class Utils {
     }
 
     public static <T> int unclaimOutpost(KingdomPlayer kp, Kingdom k, KingdomsObject<T> l) {
-        KingdomMetadata outpostdata = l.getMetadata().get(AntagonCore.outpost_id);
+        KingdomMetadata outpostdata = l.getMetadata().get("outpost_id");
         if (outpostdata == null) {
             return 0;
         }
@@ -90,7 +90,7 @@ public class Utils {
         long outpostid = ((StandardKingdomMetadata) outpostdata).getLong();
         Set<SimpleChunkLocation> toUnclaim = new HashSet<>();
         k.getLands().forEach(kl -> {
-            KingdomMetadata kld = kl.getMetadata().get(AntagonCore.outpost_id);
+            KingdomMetadata kld = kl.getMetadata().get("outpost_id");
             if (kld == null) {
                 return;
             }

@@ -24,6 +24,7 @@ import org.kingdoms.constants.land.structures.StructureRegistry;
 import org.kingdoms.constants.land.structures.StructureStyle;
 import org.kingdoms.constants.land.structures.StructureType;
 import org.kingdoms.constants.metadata.KingdomMetadata;
+import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 import org.kingdoms.constants.metadata.StandardKingdomMetadata;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.constants.player.StandardKingdomPermission;
@@ -39,6 +40,7 @@ import org.kingdoms.utils.nbt.NBTType;
 import org.kingdoms.utils.nbt.NBTWrappers;
 
 import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.KingdomsModule;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 
 public class OutpostListener implements Listener {
@@ -221,8 +223,10 @@ public class OutpostListener implements Listener {
         // Add metadata
         // ID is simply cur time, no way 2 people put an outpost at the same millisecond...
         StandardKingdomMetadata skm = new StandardKingdomMetadata(System.currentTimeMillis());
-        land.getMetadata().put(AntagonCore.outpost_id, skm);
-        outpost.getMetadata().put(AntagonCore.outpost_id, skm);
+        // Use KingdomsModule instead of AntagonCore static field
+        land.getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), skm);
+        outpost.getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), skm);
+
 
         // Remove item amount
         ItemStack hand = p.getInventory().getItem(Objects.requireNonNull(event.getHand()));
@@ -300,7 +304,7 @@ public class OutpostListener implements Listener {
                     }
 
                     // If any surrounding land doesn't have metadata, it means its a nexus land
-                    KingdomMetadata data = scll.getMetadata().get(AntagonCore.outpost_id);
+                    KingdomMetadata data = scll.getMetadata().get(KingdomsModule.getOutpostId());
                     if (data == null) {
                         return;
                     }
@@ -315,7 +319,7 @@ public class OutpostListener implements Listener {
                 // function, and also to allow nexus to be moved to an invasion spot.
                 if (event.getReason() == ClaimLandEvent.Reason.INVASION && checked.size() == 8) {
                     long ctime = System.currentTimeMillis();
-                    scl.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(-1 * ctime));
+                    scl.getLand().getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), new StandardKingdomMetadata(-1 * ctime));
                     return;
                 }
             }
@@ -326,9 +330,8 @@ public class OutpostListener implements Listener {
 
             // If we got to this point, an outpost land must've been found. Then add the metadata to all claimed chunks
             long finalid = outpost_id;
-            chunks.forEach(c -> c.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(finalid)));
-        }, 1);
-    }
+            chunks.forEach(c -> c.getLand().getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), new StandardKingdomMetadata(finalid)));
+        }, 1);    }
 
     // Stop unclaiming of outpost chunk
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -343,7 +346,7 @@ public class OutpostListener implements Listener {
         }
 
         // Remove metadata
-        event.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(AntagonCore.outpost_id));
+        event.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(KingdomsModule.getOutpostId()));
     }
 
     // Checks if a land can be unclaimed
@@ -377,7 +380,7 @@ public class OutpostListener implements Listener {
         }
 
         Land l = event.getTo().toSimpleChunkLocation().getLand();
-        KingdomMetadata meta = l.getMetadata().get(AntagonCore.outpost_id);
+        KingdomMetadata meta = l.getMetadata().get(KingdomsModule.getOutpostId());
         if (meta == null) {
             return;
         }

@@ -1,8 +1,7 @@
-// Весь листенер отвечает за то чтобы добавить дополнительное взаимодействие с дискордом для кингдомсов
-
 package com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook;
 
 import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.KingdomsModule;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.DiscordUtils;
 import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 
@@ -15,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.kingdoms.constants.group.Kingdom;
+import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 import org.kingdoms.constants.metadata.StandardKingdomMetadata;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.general.*;
@@ -41,6 +41,7 @@ public class DiscordsrvListener implements Listener {
         this.plugin = plugin;
         roleOnCreation = DiscordUtil.getRole(plugin.config.getString("discord.giveDiscordRoleOnKingdomCreation"));
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomCreate(KingdomCreateEvent event) {
@@ -54,6 +55,7 @@ public class DiscordsrvListener implements Listener {
         DiscordUtils.createRole(kingdom, "Создание клана");
         DiscordUtil.addRoleToMember(DiscordUtils.getMember(playerUUID), roleOnCreation);
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomDisband(KingdomDisbandEvent event) {
@@ -72,6 +74,7 @@ public class DiscordsrvListener implements Listener {
         // Удаляем роль "Название клана" у каждого участника
         DiscordUtils.removeRole(kingdom, "Удаление клана");
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomKingChange(KingdomKingChangeEvent event) {
@@ -89,6 +92,7 @@ public class DiscordsrvListener implements Listener {
         DiscordUtil.removeRolesFromMember(DiscordUtils.getMember(oldKingUUID), roleOnCreation);
         DiscordUtil.addRoleToMember(DiscordUtils.getMember(newKingUUID), roleOnCreation);
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onGroupRenameEvent(GroupRenameEvent event) {
@@ -106,6 +110,7 @@ public class DiscordsrvListener implements Listener {
         DiscordUtil.getRole(roleId).getManager().setName(event.getNewName()).reason("Переименование клана").queue();
 
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomJoin(KingdomJoinEvent event) {
@@ -126,6 +131,7 @@ public class DiscordsrvListener implements Listener {
             DiscordUtil.addRoleToMember(DiscordUtils.getMember(player.getUniqueId()), role);
         });
     }
+    
     // REVIEW: Проверить работоспособность
     @EventHandler
     public void onKingdomLeave(KingdomLeaveEvent event) {
@@ -162,7 +168,10 @@ public class DiscordsrvListener implements Listener {
         // Register next latest time to buy shield
         Kingdom k = (Kingdom) event.getGroup();
         long shieldtime = System.currentTimeMillis() + event.getShieldDuration() * 2;
-        k.getMetadata().put(AntagonCore.shield_time, new StandardKingdomMetadata(shieldtime));
+        
+        // Use KingdomsModule instead of AntagonCore static field
+        k.getMetadata().put((KingdomMetadataHandler)KingdomsModule.getKHandler(), new StandardKingdomMetadata(shieldtime));
+        
         String time = Utils.formatDate(event.getShieldDuration());
         DiscordUtil.sendMessage(defaultKingdomsChannel, ":shield: **" + k.getName() + "** активировал щит на время: " + time);
         Bukkit.getOnlinePlayers().forEach(p -> Utils.msg(p, "&6" + k.getName() + " &2активировал щит на время: &6" + time));
@@ -170,7 +179,7 @@ public class DiscordsrvListener implements Listener {
         // Close other shield buyers to stop abuse
         // k.getOnlineMembers().forEach(p -> Utils.closeInventory(p, "Shields", "Challenge"));
     }
-
+    
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDisband(KingdomDisbandEvent event) {
         if (!plugin.isKingdomsDiscordsrvAddonEnabled) {
@@ -238,9 +247,11 @@ public class DiscordsrvListener implements Listener {
         // Add shield if aggressor
         long shieldtime = k.getSince() + Utils.getNewbieTime();
         k.activateShield(shieldtime - System.currentTimeMillis());
-        k.getMetadata().put(AntagonCore.shield_time, new StandardKingdomMetadata(shieldtime));
+        
+        // Use KingdomsModule instead of AntagonCore static field
+        k.getMetadata().put((KingdomMetadataHandler)KingdomsModule.getKHandler(), new StandardKingdomMetadata(shieldtime));
     }
-    
+
     private void setPacifist(Kingdom k, Player player) {
         k.setPacifist(true);
         KingdomsLang.COMMAND_CREATE_PACIFIST.sendMessage(player);

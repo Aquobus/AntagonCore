@@ -1,38 +1,64 @@
 package com.aquobus.antagoncore.modules.kingdoms;
 
 import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.kingdoms.clanlimiter.events.ClanLimiterListener;
-import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
-import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
-
 import org.bukkit.Bukkit;
-import org.kingdoms.constants.metadata.KingdomMetadataHandler;
-import org.kingdoms.constants.metadata.StandardKingdomMetadataHandler;
-import org.kingdoms.constants.namespace.Namespace;
+import org.bukkit.event.Listener;
 
 public class KingdomsModule {
     
-    private static KingdomMetadataHandler outpost_id;
-    private static KingdomMetadataHandler kHandler;
+    private static Object outpost_id;
+    private static Object kHandler;
     
     public static void initialize(AntagonCore plugin) {
-        outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
-        kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
-        
-        // Register Kingdoms-dependent events
-        Bukkit.getPluginManager().registerEvents(new OutpostListener(plugin), plugin);
-        Bukkit.getPluginManager().registerEvents(new ClanLimiterListener(plugin), plugin);
-        
-        if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
-            Bukkit.getPluginManager().registerEvents(new DiscordsrvListener(plugin), plugin);
+        try {
+            // Load classes using reflection
+            Class<?> namespaceClass = Class.forName("org.kingdoms.constants.namespace.Namespace");
+            Class<?> handlerClass = Class.forName("org.kingdoms.constants.metadata.StandardKingdomMetadataHandler");
+            
+            // Create namespace objects
+            Object outpostNamespace = namespaceClass.getConstructor(String.class, String.class)
+                .newInstance("AntagonCore", "OUTPOST_ID");
+            Object kHandlerNamespace = namespaceClass.getConstructor(String.class, String.class)
+                .newInstance("AntagonCore", "KHANDLER");
+            
+            // Create metadata handlers
+            outpost_id = handlerClass.getConstructor(namespaceClass).newInstance(outpostNamespace);
+            kHandler = handlerClass.getConstructor(namespaceClass).newInstance(kHandlerNamespace);
+            
+            // Register event listeners
+            try {
+                Class<?> outpostListenerClass = Class.forName("com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener");
+                Class<?> clanLimiterListenerClass = Class.forName("com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener");
+                
+                Listener outpostListener = (Listener) outpostListenerClass.getConstructor(AntagonCore.class).newInstance(plugin);
+                Listener clanLimiterListener = (Listener) clanLimiterListenerClass.getConstructor(AntagonCore.class).newInstance(plugin);
+                
+                Bukkit.getPluginManager().registerEvents(outpostListener, plugin);
+                Bukkit.getPluginManager().registerEvents(clanLimiterListener, plugin);
+                
+                // Register DiscordSRV listener if available
+                if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
+                    Class<?> discordSrvListenerClass = Class.forName("com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener");
+                    Listener discordSrvListener = (Listener) discordSrvListenerClass.getConstructor(AntagonCore.class).newInstance(plugin);
+                    Bukkit.getPluginManager().registerEvents(discordSrvListener, plugin);
+                }
+                
+                plugin.getLogger().info("Kingdoms event listeners registered successfully");
+            } catch (Exception e) {
+                plugin.getLogger().warning("Failed to register Kingdoms event listeners: " + e.getMessage());
+            }
+            
+            plugin.getLogger().info("Kingdoms module initialized successfully");
+        } catch (Exception e) {
+            plugin.getLogger().warning("Failed to initialize Kingdoms module: " + e.getMessage());
         }
     }
     
-    public static KingdomMetadataHandler getOutpostId() {
+    public static Object getOutpostId() {
         return outpost_id;
     }
     
-    public static KingdomMetadataHandler getKHandler() {
+    public static Object getKHandler() {
         return kHandler;
     }
 }

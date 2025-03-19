@@ -30,9 +30,6 @@ import java.util.Objects;
 
 public final class AntagonCore extends JavaPlugin {
     public static AntagonCore plugin;
-    public static KingdomMetadataHandler shield_time;
-    public static KingdomMetadataHandler kHandler;
-    public static KingdomMetadataHandler outpost_id;
     public static RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
 
     public boolean isAntiElytraEnabled;
@@ -104,8 +101,6 @@ public final class AntagonCore extends JavaPlugin {
         plugin = this;
         instance = this;
 
-        outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
-        kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
         packLoaded = new ArrayList<>();
 
         // Plugin startup logic
@@ -114,11 +109,6 @@ public final class AntagonCore extends JavaPlugin {
 
         if (provider != null) {
             this.api = provider.getProvider();
-        }
-
-        if (getServer().getPluginManager().isPluginEnabled("Kingdoms")) {
-            outpost_id = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "OUTPOST_ID"));
-            kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
         }
 
         // Register non-Kingdoms events
@@ -149,7 +139,6 @@ public final class AntagonCore extends JavaPlugin {
                 getLogger().warning("Failed to load Kingdoms module: " + e.getMessage());
             }
         }
-
 
         new FastMinecarts(this);
 
@@ -196,7 +185,7 @@ public final class AntagonCore extends JavaPlugin {
         getLogger().info("AntagonCore успешно был включен");
         //getServer().getLogger().info("AntagonCore успешно был включен");
     }
-    
+
     @Override
     public void onDisable() {
         getLogger().info("AntagonCore был отключен");
