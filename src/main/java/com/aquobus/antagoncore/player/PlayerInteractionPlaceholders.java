@@ -26,7 +26,7 @@ public class PlayerInteractionPlaceholders extends PlaceholderExpansion {
     
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return "1.3.4";
     }
     
     @Override
