@@ -30,6 +30,8 @@ modules:
   multiBowl: true
   # Is burned block of tree drops coal
   woodBurnedToCoal: true
+  # Player interaction menu when right-clicking on another player
+  playerInteraction: true
 kingdomSettings:
   # Amount of hours after plugin disband kingdom if amount of players after leaved player lower than {disbandPlayerMinimum}
   disbandDelayHoursAfterLeavedPlayer: 24

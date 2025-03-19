@@ -1,24 +1,28 @@
 package com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils;
 
-import com.aquobus.antagoncore.AntagonCore;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import java.util.UUID;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.kingdoms.config.KingdomsConfig;
 import org.kingdoms.constants.group.Kingdom;
 import org.kingdoms.constants.land.location.SimpleChunkLocation;
-import org.kingdoms.constants.metadata.*;
+import org.kingdoms.constants.metadata.KingdomMetadata;
+import org.kingdoms.constants.metadata.KingdomsObject;
+import org.kingdoms.constants.metadata.StandardKingdomMetadata;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.events.lands.UnclaimLandEvent;
+
+import com.aquobus.antagoncore.AntagonCore;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.kingdoms.utils.time.TimeFormatter;
 
-import java.util.HashSet;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
 
 import static com.aquobus.antagoncore.AntagonCore.plugin;
 
@@ -36,7 +40,7 @@ public class Utils {
     }
 
     public static String getLastChallenge(Kingdom kingdom) {
-        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get(AntagonCore.kHandler);
+        StandardKingdomMetadata skm = (StandardKingdomMetadata) kingdom.getMetadata().get("last_challenge");
         return skm == null ? null : skm.getString();
     }
 
@@ -78,7 +82,7 @@ public class Utils {
     }
 
     public static <T> int unclaimOutpost(KingdomPlayer kp, Kingdom k, KingdomsObject<T> l) {
-        KingdomMetadata outpostdata = l.getMetadata().get(AntagonCore.outpost_id);
+        KingdomMetadata outpostdata = l.getMetadata().get("outpost_id");
         if (outpostdata == null) {
             return 0;
         }
@@ -86,7 +90,7 @@ public class Utils {
         long outpostid = ((StandardKingdomMetadata) outpostdata).getLong();
         Set<SimpleChunkLocation> toUnclaim = new HashSet<>();
         k.getLands().forEach(kl -> {
-            KingdomMetadata kld = kl.getMetadata().get(AntagonCore.outpost_id);
+            KingdomMetadata kld = kl.getMetadata().get("outpost_id");
             if (kld == null) {
                 return;
             }

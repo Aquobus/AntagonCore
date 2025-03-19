@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ElytraListener implements Listener {
-    private static final Set<Player> elytraCancelling = new HashSet<>();
     private final AntagonCore plugin;
+    private static final Set<Player> elytraCancelling = new HashSet<>();
 
     public ElytraListener(AntagonCore plugin) {
         this.plugin = plugin;

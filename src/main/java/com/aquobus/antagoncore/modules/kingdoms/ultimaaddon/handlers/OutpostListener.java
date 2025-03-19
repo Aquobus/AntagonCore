@@ -1,7 +1,9 @@
 package com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers;
 
-import com.aquobus.antagoncore.AntagonCore;
-import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,6 +24,7 @@ import org.kingdoms.constants.land.structures.StructureRegistry;
 import org.kingdoms.constants.land.structures.StructureStyle;
 import org.kingdoms.constants.land.structures.StructureType;
 import org.kingdoms.constants.metadata.KingdomMetadata;
+import org.kingdoms.constants.metadata.KingdomMetadataHandler;
 import org.kingdoms.constants.metadata.StandardKingdomMetadata;
 import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.constants.player.StandardKingdomPermission;
@@ -36,30 +39,23 @@ import org.kingdoms.utils.nbt.ItemNBT;
 import org.kingdoms.utils.nbt.NBTType;
 import org.kingdoms.utils.nbt.NBTWrappers;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import com.aquobus.antagoncore.AntagonCore;
+import com.aquobus.antagoncore.modules.kingdoms.KingdomsModule;
+import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.utils.Utils;
 
 public class OutpostListener implements Listener {
     private static final Set<Structure> justRemoved = new HashSet<>();
-
-    private AntagonCore plugin;
+    private final AntagonCore plugin;
 
     public OutpostListener(AntagonCore plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onOutpostBreak(KingdomItemBreakEvent<Structure> event) {
-        //if (!(event.getKingdomItem() instanceof Structure)) {
-        //    return;
-        //}
+    public void onOutpostBreak(KingdomItemBreakEvent<Structure> e) {
+        e.getKingdomItem();
 
-        if (!plugin.isKingdomsColoniesEnabled) {
-            return;
-        }
-
-        Structure structure = event.getKingdomItem();
+        Structure structure = e.getKingdomItem();
         if (!structure.getNameOrDefault().equals("Outpost")) {
             return;
         }
@@ -71,29 +67,32 @@ public class OutpostListener implements Listener {
         }
 
         // Allow if structure was removed by Kingdoms or a player w/o kingdom
-        KingdomPlayer kp = event.getPlayer();
+        KingdomPlayer kp = e.getPlayer();
         if (kp == null || !kp.hasKingdom()) {
             return;
         }
 
-        // Allow if structure has no land (if kingdom did unclaimall or disbanded)
-        if (!structure.getLand().isClaimed()) {
+        // Allow if structure has no land (if kingdom did unclaim all or disbanded)
+        if (!Objects.requireNonNull(structure.getLand()).isClaimed()) {
             return;
         }
 
         // Must not be in war
         Player p = kp.getPlayer();
         if (Utils.hasChallenged(kp.getKingdom())) {
-            Utils.msg(p, "&cВы не можете этого сделать, поскольку вам бросили вызов или вы в состоянии войны.");
+            assert p != null;
+            Utils.msg(p, "&cВы не можете этого сделать, поскольку вам бросили вызов или были брошены другим королевством.");
             return;
         }
 
         if (!kp.hasPermission(StandardKingdomPermission.UNCLAIM)) {
-            Utils.msg(p, "&cУ вашего ранга в королевстве должно быть разрешение на удаление аванпостов без запроса!");
+            assert p != null;
+            Utils.msg(p, "&cУ вашего ранга в королевстве должны быть разрешения на удаление аванпостов без запроса!");
             return;
         }
 
         // For some reason without the 1 tick delay it skips the confirmation screen
+        assert p != null;
         p.closeInventory();
         Utils.schedule(1, () -> {
             justRemoved.add(structure);
@@ -145,6 +144,7 @@ public class OutpostListener implements Listener {
         // so when you set the type it doesn't affect the player(?)
         event.setCancelled(true);
         Player p = event.getPlayer();
+        assert item != null;
         Material type = item.getType();
         item.setType(Material.AIR);
 
@@ -214,7 +214,6 @@ public class OutpostListener implements Listener {
         StructureStyle outpostStyle = StructureRegistry.getStyle("outpost");
         Structure outpost = outpostStyle.getType().build(
                 new KingdomItemBuilder<>(outpostStyle, SimpleLocation.of(pb), kp));
-                //new KingdomItemBuilder<Structure, StructureStyle, StructureType>(outpostStyle, SimpleLocation.of(pb), kp));
         land.getStructures().put(sl, outpost);
         outpost.spawnHolograms(k);
         outpost.playSound("place");
@@ -222,13 +221,15 @@ public class OutpostListener implements Listener {
         Utils.msg(p, "&2Захвачена территория аванпоста на координатах &6" + scl.getX() + "&7, &6" + scl.getZ());
 
         // Add metadata
-        // ID is simply cur time, no way 2 people put an outpost at the same milisecond...
+        // ID is simply cur time, no way 2 people put an outpost at the same millisecond...
         StandardKingdomMetadata skm = new StandardKingdomMetadata(System.currentTimeMillis());
-        land.getMetadata().put(AntagonCore.outpost_id, skm);
-        outpost.getMetadata().put(AntagonCore.outpost_id, skm);
+        // Use KingdomsModule instead of AntagonCore static field
+        land.getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), skm);
+        outpost.getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), skm);
+
 
         // Remove item amount
-        ItemStack hand = p.getInventory().getItem(event.getHand());
+        ItemStack hand = p.getInventory().getItem(Objects.requireNonNull(event.getHand()));
         hand.setAmount(hand.getAmount() - 1);
 
         // Visualize lands
@@ -257,6 +258,7 @@ public class OutpostListener implements Listener {
         Player p = event.getPlayer().getPlayer();
         if (k.getNexus() == null) {
             event.setCancelled(true);
+            assert p != null;
             Utils.msg(p, "&cВы должны поставить Нексус с помощью &a/k nexus &c, прежде чем захватывать больше земель!");
             return;
         }
@@ -265,6 +267,7 @@ public class OutpostListener implements Listener {
         Set<SimpleChunkLocation> chunks = event.getLandLocations();
         if (k.getLandLocations().stream().noneMatch(scl -> scl.getWorld().equals(p.getWorld().getName()))) {
             event.setCancelled(true);
+            assert p != null;
             Utils.msg(p, "&cВаша земля должна быть присоединена к остальным землям королевства.");
             return;
         }
@@ -301,7 +304,7 @@ public class OutpostListener implements Listener {
                     }
 
                     // If any surrounding land doesn't have metadata, it means its a nexus land
-                    KingdomMetadata data = scll.getMetadata().get(AntagonCore.outpost_id);
+                    KingdomMetadata data = scll.getMetadata().get(KingdomsModule.getOutpostId());
                     if (data == null) {
                         return;
                     }
@@ -316,7 +319,7 @@ public class OutpostListener implements Listener {
                 // function, and also to allow nexus to be moved to an invasion spot.
                 if (event.getReason() == ClaimLandEvent.Reason.INVASION && checked.size() == 8) {
                     long ctime = System.currentTimeMillis();
-                    scl.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(-1 * ctime));
+                    scl.getLand().getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), new StandardKingdomMetadata(-1 * ctime));
                     return;
                 }
             }
@@ -327,9 +330,8 @@ public class OutpostListener implements Listener {
 
             // If we got to this point, an outpost land must've been found. Then add the metadata to all claimed chunks
             long finalid = outpost_id;
-            chunks.forEach(c -> c.getLand().getMetadata().put(AntagonCore.outpost_id, new StandardKingdomMetadata(finalid)));
-        }, 1);
-    }
+            chunks.forEach(c -> c.getLand().getMetadata().put((KingdomMetadataHandler) KingdomsModule.getOutpostId(), new StandardKingdomMetadata(finalid)));
+        }, 1);    }
 
     // Stop unclaiming of outpost chunk
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -344,12 +346,12 @@ public class OutpostListener implements Listener {
         }
 
         // Remove metadata
-        event.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(AntagonCore.outpost_id));
+        event.getLandLocations().forEach(scl -> scl.getLand().getMetadata().remove(KingdomsModule.getOutpostId()));
     }
 
     // Checks if a land can be unclaimed
     private boolean cancelUnclaim(UnclaimLandEvent e) {
-        // Don't check if unclaimall was done
+        // Don't check if unclaim all was done
         if (e.getLandLocations().size() > 1) {
             return false;
         }
@@ -360,9 +362,9 @@ public class OutpostListener implements Listener {
         }
 
         for (SimpleChunkLocation scl : e.getLandLocations()) {
-            if (scl.getLand().getStructures().values().stream().anyMatch(s -> s.getNameOrDefault().equals("Outpost"))) {
+            if (Objects.requireNonNull(scl.getLand()).getStructures().values().stream().anyMatch(s -> s.getNameOrDefault().equals("Outpost"))) {
                 e.setCancelled(true);
-                Utils.msg(e.getPlayer().getPlayer(), "&cЧтобы расприватить территорию, сломайте аванпост.");
+                Utils.msg(Objects.requireNonNull(Objects.requireNonNull(e.getPlayer()).getPlayer()), "&cЧтобы расприватить территорию, сломайте аванпост.");
                 return true;
             }
         }
@@ -378,7 +380,7 @@ public class OutpostListener implements Listener {
         }
 
         Land l = event.getTo().toSimpleChunkLocation().getLand();
-        KingdomMetadata meta = l.getMetadata().get(AntagonCore.outpost_id);
+        KingdomMetadata meta = l.getMetadata().get(KingdomsModule.getOutpostId());
         if (meta == null) {
             return;
         }
