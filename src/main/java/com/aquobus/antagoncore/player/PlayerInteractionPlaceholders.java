@@ -2,6 +2,8 @@ package com.aquobus.antagoncore.player;
 
 import com.aquobus.antagoncore.AntagonCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 import org.kingdoms.constants.player.KingdomPlayer;
@@ -60,7 +62,7 @@ public class PlayerInteractionPlaceholders extends PlaceholderExpansion {
             case "target_name":
                 return target.getName();
             case "target_displayname":
-                return target.getDisplayName();
+                return LegacyComponentSerializer.legacySection().serialize(target.displayName());
             case "target_ping":
                 try {
                     // This is a reflection-based approach, might need adjustment based on server version
