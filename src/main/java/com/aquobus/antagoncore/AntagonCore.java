@@ -4,14 +4,8 @@ import com.aquobus.antagoncore.commands.ACore;
 import com.aquobus.antagoncore.commands.CommandCompleter;
 import com.aquobus.antagoncore.modules.antiElytra.ElytraListener;
 import com.aquobus.antagoncore.modules.betterLeaves.BetterLeaves;
-import com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents;
-import com.aquobus.antagoncore.modules.discord_bot.DiscordCommands;
-import com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents;
 import com.aquobus.antagoncore.modules.fastDirtPath.FastDirtPath;
 import com.aquobus.antagoncore.modules.fastMinecarts.FastMinecarts;
-import com.aquobus.antagoncore.modules.kingdoms.clanlimiter.events.ClanLimiterListener;
-import com.aquobus.antagoncore.modules.kingdoms.discordsrv_hook.DiscordsrvListener;
-import com.aquobus.antagoncore.modules.kingdoms.ultimaaddon.handlers.OutpostListener;
 import com.aquobus.antagoncore.modules.lightningToGlass.LightningToGlass;
 import com.aquobus.antagoncore.modules.luckperms.PlayerRightsListener;
 import com.aquobus.antagoncore.modules.minecartHurtEntity.minecartHurtsEntityListener;
@@ -21,7 +15,6 @@ import com.aquobus.antagoncore.modules.woodBurnedToCoal.woodBurnedToCoalEvent;
 import com.aquobus.antagoncore.player.PlayerInteractionListener;
 import com.aquobus.antagoncore.player.PlayerInteractionPlaceholders;
 
-import github.scarsz.discordsrv.DiscordSRV;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -128,15 +121,12 @@ public final class AntagonCore extends JavaPlugin {
             kHandler = new StandardKingdomMetadataHandler(new Namespace("AntagonCore", "KHANDLER"));
         }
 
-        // Events register
+        // Register non-Kingdoms events
         getServer().getPluginManager().registerEvents(new BetterLeaves(this), this);
         getServer().getPluginManager().registerEvents(new FastDirtPath(this), this);
         getServer().getPluginManager().registerEvents(new ElytraListener(this), this);
-        //getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
-        //getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerRightsListener(this), this);
         getServer().getPluginManager().registerEvents(new LoadListener(this), this);
-        getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
         getServer().getPluginManager().registerEvents(new LightningToGlass(this), this);
         getServer().getPluginManager().registerEvents(new minecartHurtsEntityListener(this), this);
         getServer().getPluginManager().registerEvents(new VillagerTransportation(this), this);
@@ -150,13 +140,16 @@ public final class AntagonCore extends JavaPlugin {
          * TODO: Create a class where these 'ifs' will be implemented
          */
         if (getServer().getPluginManager().isPluginEnabled("Kingdoms")) {
-            getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
-            getServer().getPluginManager().registerEvents(new ClanLimiterListener(this), this);
-            
-            if (getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
-                getServer().getPluginManager().registerEvents(new DiscordsrvListener(this), this);
+            try {
+                // Use reflection to load the Kingdoms module
+                Class<?> kingdomsModuleClass = Class.forName("com.aquobus.antagoncore.modules.kingdoms.KingdomsModule");
+                kingdomsModuleClass.getMethod("initialize", AntagonCore.class).invoke(null, this);
+                getLogger().info("Kingdoms module loaded successfully");
+            } catch (Exception e) {
+                getLogger().warning("Failed to load Kingdoms module: " + e.getMessage());
             }
         }
+
 
         new FastMinecarts(this);
 
@@ -172,9 +165,29 @@ public final class AntagonCore extends JavaPlugin {
             }
         }
 
-        DiscordSRV.api.subscribe(new DiscordReadyEvents());
-        DiscordSRV.api.subscribe(new DiscordCommandEvents());
-        DiscordSRV.api.subscribe(new DiscordCommands());
+        // Load DiscordSRV module if available
+        if (getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
+            try {
+                Class.forName("github.scarsz.discordsrv.DiscordSRV");
+                
+                // Use reflection to avoid direct class references
+                Class<?> discordReadyEventsClass = Class.forName("com.aquobus.antagoncore.modules.discord_bot.DiscordReadyEvents");
+                Class<?> discordCommandEventsClass = Class.forName("com.aquobus.antagoncore.modules.discord_bot.DiscordCommandEvents");
+                Class<?> discordCommandsClass = Class.forName("com.aquobus.antagoncore.modules.discord_bot.DiscordCommands");
+                
+                Class<?> discordSRVClass = Class.forName("github.scarsz.discordsrv.DiscordSRV");
+                Object discordSRVApi = discordSRVClass.getMethod("getApi").invoke(null);
+                
+                discordSRVApi.getClass().getMethod("subscribe", Object.class).invoke(discordSRVApi, discordReadyEventsClass.getDeclaredConstructor().newInstance());
+                discordSRVApi.getClass().getMethod("subscribe", Object.class).invoke(discordSRVApi, discordCommandEventsClass.getDeclaredConstructor().newInstance());
+                discordSRVApi.getClass().getMethod("subscribe", Object.class).invoke(discordSRVApi, discordCommandsClass.getDeclaredConstructor().newInstance());
+                
+                getLogger().info("DiscordSRV module loaded successfully");
+            } catch (Exception e) {
+                getLogger().warning("Failed to load DiscordSRV module: " + e.getMessage());
+            }
+        }
+
         // Commands register
         Objects.requireNonNull(getServer().getPluginCommand("antagoncore")).setExecutor(new ACore(this));
         // TabCompleter register
